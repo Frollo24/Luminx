@@ -1,6 +1,6 @@
 include "dependencies.lua"
 
-workspace "Luminix"
+workspace "Luminx"
 	architecture "x64"
 	startproject "Sandbox"
 
@@ -16,10 +16,10 @@ outputbindir = "build/bin/%{cfg.buildcfg}-%{cfg.architecture}"
 outputintdir = "build/int/%{cfg.buildcfg}-%{cfg.architecture}"
 
 group "Dependencies"
-	include "LuminixEngine/vendor/GLFW"
-	include "LuminixEngine/vendor/Glad"
-	include "LuminixEngine/vendor/imgui"
+	include "LuminxEngine/vendor/GLFW"
+	include "LuminxEngine/vendor/Glad"
+	include "LuminxEngine/vendor/imgui"
 group ""
 
-include "LuminixEngine"
+include "LuminxEngine"
 include "Sandbox"

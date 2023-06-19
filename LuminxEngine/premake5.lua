@@ -1,5 +1,5 @@
-project "Sandbox"
-	kind "ConsoleApp"
+project "LuminxEngine"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "Off"
@@ -7,23 +7,36 @@ project "Sandbox"
 	targetdir ("%{wks.location}/" .. outputbindir .. "/%{prj.name}")
 	objdir ("%{wks.location}/" .. outputintdir .. "/%{prj.name}")
 
+	pchheader "lumpch.h"
+	pchsource "src/lumpch.cpp"
+
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"vendor/stb_image/**.h",
+		"vendor/stb_image/**.cpp",
+		"vendor/glm/glm/**.hpp",
+		"vendor/glm/glm/**.inl"
 	}
 
 	includedirs
 	{
-		"%{wks.location}/LuminxEngine/src",
-		"%{wks.location}/LuminxEngine/vendor/spdlog/include",
-		"%{wks.location}/LuminxEngine/vendor/glm",
-		"%{wks.location}/LuminxEngine/vendor/imgui",
+		"src",
+		"vendor/spdlog/include",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.stb_image}",
 	}
 
 	links
 	{
-		"LuminxEngine"
+		"GLFW",
+		"Glad",
+		"ImGui",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -31,7 +44,8 @@ project "Sandbox"
 
 		defines
 		{
-			"LUM_PLATFORM_WINDOWS"
+			"LUM_PLATFORM_WINDOWS",
+			"GLFW_INCLUDE_NONE"
 		}
 
 	filter "configurations:Debug"
@@ -46,7 +60,6 @@ project "Sandbox"
 		symbols "On"
 
 	filter "configurations:Dist"
-		kind "WindowedApp"
 		defines "LUM_DIST"
 		runtime "Release"
 		optimize "On"

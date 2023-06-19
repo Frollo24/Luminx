@@ -1,14 +1,14 @@
 #define LUMINIX_ENTRY_POINT
-#include <Luminix.h>
+#include <Luminx.h>
 
-class Sandbox : public Luminix::Application
+class Sandbox : public Luminx::Application
 {
 public:
 	Sandbox() = default;
 	virtual ~Sandbox() = default;
 };
 
-Luminix::Application* Luminix::CreateApplication()
+Luminx::Application* Luminx::CreateApplication()
 {
 	return new Sandbox();
 }

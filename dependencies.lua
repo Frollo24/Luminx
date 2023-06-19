@@ -1,6 +1,6 @@
 IncludeDir = {}
-IncludeDir["GLFW"] = "%{wks.location}/LuminixEngine/vendor/GLFW/include"
-IncludeDir["Glad"] = "%{wks.location}/LuminixEngine/vendor/Glad/include"
-IncludeDir["glm"] = "%{wks.location}/LuminixEngine/vendor/glm"
-IncludeDir["ImGui"] = "%{wks.location}/LuminixEngine/vendor/imgui"
-IncludeDir["stb_image"] = "%{wks.location}/LuminixEngine/vendor/stb_image"
+IncludeDir["GLFW"] = "%{wks.location}/LuminxEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "%{wks.location}/LuminxEngine/vendor/Glad/include"
+IncludeDir["glm"] = "%{wks.location}/LuminxEngine/vendor/glm"
+IncludeDir["ImGui"] = "%{wks.location}/LuminxEngine/vendor/imgui"
+IncludeDir["stb_image"] = "%{wks.location}/LuminxEngine/vendor/stb_image"
