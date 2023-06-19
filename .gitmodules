@@ -1,0 +1,12 @@
+[submodule "MagmaEngine/vendor/spdlog"]
+	path = MagmaEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "MagmaEngine/vendor/GLFW"]
+	path = MagmaEngine/vendor/GLFW
+	url = https://github.com/Frollo24/GLFW
+[submodule "MagmaEngine/vendor/imgui"]
+	path = MagmaEngine/vendor/imgui
+	url = https://github.com/Frollo24/imgui
+[submodule "MagmaEngine/vendor/glm"]
+	path = MagmaEngine/vendor/glm
+	url = https://github.com/g-truc/glm
