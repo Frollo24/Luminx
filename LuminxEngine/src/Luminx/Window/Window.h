@@ -2,6 +2,7 @@
 
 #include "Luminx/Core/Base.h"
 #include "Luminx/Events/Event.h"
+#include "Luminx/Renderer/RenderContext.h"
 
 struct GLFWwindow;
 
@@ -59,6 +60,7 @@ namespace Luminx
 		WindowData m_Data;
 
 		GLFWwindow* m_NativeWindow = nullptr;
+		Scope<RenderContext> m_RenderContext = nullptr;
 	};
 }
 

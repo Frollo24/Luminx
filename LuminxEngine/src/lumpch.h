@@ -4,3 +4,4 @@
 #include "Luminx/Core/Includes.h"
 #include "Luminx/Core/DataTypes.h"
 #include "Luminx/Core/Base.h"
+#include "Luminx/Core/Log.h"

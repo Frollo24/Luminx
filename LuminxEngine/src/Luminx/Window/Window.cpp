@@ -23,17 +23,13 @@ namespace Luminx
 	void Window::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_NativeWindow);
+		m_RenderContext->SwapBuffers();
 	}
 
 	void Window::SetVSync(bool enabled)
 	{
 		m_Data.VSync = enabled;
-
-		if (enabled)
-			glfwSwapInterval(1);
-		else
-			glfwSwapInterval(0);
+		m_RenderContext->SetSwapInterval(enabled ? 1 : 0);
 	}
 
 	float Window::GetTime()
@@ -55,6 +51,9 @@ namespace Luminx
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		m_NativeWindow = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		m_RenderContext = CreateScope<RenderContext>(m_NativeWindow);
+		m_RenderContext->Init();
+
 		SetCallbacks();
 	}
 

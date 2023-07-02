@@ -9,6 +9,13 @@
 #include "Luminx/Core/Log.h"
 #include "Luminx/Core/Time.h"
 
+// Events
+#include "Luminx/Events/Event.h"
+
+// Renderer
+#include "Luminx/Renderer/Renderer.h"
+#include "Luminx/Renderer/RenderDevice.h"
+
 // Window system
 #include "Luminx/Window/WindowSystem.h"
 
