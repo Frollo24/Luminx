@@ -4,7 +4,7 @@
 
 namespace Luminx
 {
-	enum BufferType
+	enum class BufferType
 	{
 		Vertex, Index
 	};

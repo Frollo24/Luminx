@@ -16,6 +16,9 @@
 #include "Luminx/Renderer/Renderer.h"
 #include "Luminx/Renderer/RenderDevice.h"
 
+// Scene
+#include "Luminx/Scene/Model.h"
+
 // Window system
 #include "Luminx/Window/WindowSystem.h"
 

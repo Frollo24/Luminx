@@ -25,9 +25,18 @@ namespace Luminx
 		RenderCommand::EndFrame();
 	}
 
-	void Renderer::Submit(const Ref<VertexArray>& vertexArray)
+	void Renderer::Submit(const Ref<VertexArray>& vertexArray, u32 vertexCount)
 	{
 		vertexArray->Bind();
-		RenderCommand::DrawVertices(3); // TODO: get vertex count
+		RenderCommand::DrawVertices(vertexCount);
+	}
+
+	void Renderer::Submit(const Ref<RenderEntity>& renderEntity)
+	{
+		RenderCommand::BindVertexArray(renderEntity->GetVertexArray());
+		if (renderEntity->GetIndexCount())
+			RenderCommand::DrawIndices(renderEntity->GetIndexCount(), renderEntity->GetVertexArray()->GetIndexType());
+		else
+			RenderCommand::DrawVertices(renderEntity->GetVertexCount());
 	}
 }

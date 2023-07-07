@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Luminx/Renderer/VertexArray.h"
+#include "Luminx/Renderer/RenderEntity.h"
 #include "Luminx/Renderer/Shader.h"
 
 namespace Luminx
@@ -14,6 +15,7 @@ namespace Luminx
 		static void BeginFrame();
 		static void EndFrame();
 
-		static void Submit(const Ref<VertexArray>& vertexArray);
+		static void Submit(const Ref<VertexArray>& vertexArray, u32 vertexCount = 3);
+		static void Submit(const Ref<RenderEntity>& renderEntity);
 	};
 }

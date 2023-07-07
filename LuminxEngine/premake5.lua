@@ -14,10 +14,12 @@ project "LuminxEngine"
 	{
 		"src/**.h",
 		"src/**.cpp",
+		"vendor/glm/glm/**.hpp",
+		"vendor/glm/glm/**.inl",
 		"vendor/stb_image/**.h",
 		"vendor/stb_image/**.cpp",
-		"vendor/glm/glm/**.hpp",
-		"vendor/glm/glm/**.inl"
+		"vendor/tiny_obj_loader/tiny_obj_loader.h",
+		"vendor/tiny_obj_loader/tiny_obj_loader.cpp"
 	}
 
 	includedirs
@@ -29,6 +31,7 @@ project "LuminxEngine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.tiny_obj_loader}"
 	}
 
 	links

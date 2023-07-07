@@ -110,7 +110,7 @@ namespace Luminx
 	{
 		LUM_CORE_VERIFY(buffer->GetDescription().Type == BufferType::Index);
 		glVertexArrayElementBuffer(m_RendererID, buffer->GetRendererID());
-		m_IndexSize = size;
+		m_IndexType = size;
 		m_IndexBuffer = buffer;
 	}
 }

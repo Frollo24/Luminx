@@ -21,12 +21,13 @@ namespace Luminx
 		inline const std::vector<Ref<Buffer>>& GetVertexBuffers() const { return m_VertexBuffers; }
 		inline const Ref<Buffer>& GetIndexBuffer() const { return m_IndexBuffer; }
 
-		inline const IndexType& GetIndexSize() const { return m_IndexSize; }
+		inline u32 GetRendererID() const { return m_RendererID; }
+		inline const IndexType& GetIndexType() const { return m_IndexType; }
 
 	private:
 		u32 m_RendererID = 0;
 		u32 m_VertexAttribPointer = 0;
-		IndexType m_IndexSize = IndexType::U32;
+		IndexType m_IndexType = IndexType::U32;
 
 		std::vector<Ref<Buffer>> m_VertexBuffers{};
 		Ref<Buffer> m_IndexBuffer = nullptr;

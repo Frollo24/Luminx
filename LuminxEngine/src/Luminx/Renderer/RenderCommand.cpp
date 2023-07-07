@@ -67,6 +67,11 @@ namespace Luminx
 		glDepthMask(depthState.DepthWrite ? GL_TRUE : GL_FALSE);
 	}
 
+	void RenderCommand::BindVertexArray(const Ref<VertexArray>& vertexArray)
+	{
+		glBindVertexArray(vertexArray->GetRendererID());
+	}
+
 	void RenderCommand::DrawVertices(u32 vertexCount, u32 firstVertex)
 	{
 		glDrawArrays(GL_TRIANGLES, firstVertex, vertexCount);
