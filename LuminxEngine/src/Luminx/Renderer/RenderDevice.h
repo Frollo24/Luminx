@@ -3,6 +3,7 @@
 #include "Luminx/Core/Base.h"
 #include "Luminx/Renderer/Buffer.h"
 #include "Luminx/Renderer/Pipeline.h"
+#include "Luminx/Renderer/Texture.h"
 
 namespace Luminx
 {
@@ -17,5 +18,8 @@ namespace Luminx
 
 		static Ref<Buffer> CreateBuffer(const BufferDescription& bufferDescription);
 		static void DestroyBuffer(Ref<Buffer>& buffer);
+
+		static Ref<Texture> CreateTexture(const TextureDescription& textureDescription);
+		static void DestroyTexture(Ref<Texture>& texture);
 	};
 }

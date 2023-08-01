@@ -22,4 +22,14 @@ namespace Luminx
 	{
 		buffer = nullptr;
 	}
+
+	Ref<Texture> RenderDevice::CreateTexture(const TextureDescription& textureDescription)
+	{
+		return CreateRef<Texture>(textureDescription);
+	}
+
+	void RenderDevice::DestroyTexture(Ref<Texture>& texture)
+	{
+		texture = nullptr;
+	}
 }

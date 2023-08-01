@@ -28,8 +28,8 @@ namespace Luminx
 		void SetData(u32 offset, u32 size, const void* data);
 
 	private:
-		u32 m_RendererID = 0;
 		BufferDescription m_Description{};
+		u32 m_RendererID = 0;
 	};
 }
 
