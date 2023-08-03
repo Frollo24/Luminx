@@ -6,6 +6,30 @@
 
 namespace Luminx
 {
+    static GLenum ImageFormatToOpenGLInternalFormat(ImageFormat format)
+    {
+        switch (format)
+        {
+            case ImageFormat::None:  return GL_NONE;
+            case ImageFormat::RGB8:  return GL_RGB8;
+            case ImageFormat::RGBA8: return GL_RGBA8;
+            default:
+                return GL_NONE;
+        }
+    }
+
+    static GLenum ImageFormatToOpenGLFormat(ImageFormat format)
+    {
+        switch (format)
+        {
+            case ImageFormat::None:  return GL_NONE;
+            case ImageFormat::RGB8:  return GL_RGB;
+            case ImageFormat::RGBA8: return GL_RGBA;
+            default:
+                return GL_NONE;
+        }
+    }
+
     Texture::Texture(const TextureDescription& desc)
         : m_Description(desc)
     {
@@ -17,8 +41,9 @@ namespace Luminx
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        // TODO: Handle multiple texture types AND FORMATS!!!
-        glTextureStorage2D(m_RendererID, 1, GL_RGB8, desc.ImageExtent.width, desc.ImageExtent.height);
+        // TODO: Handle multiple texture extents
+        GLenum internalFormat = ImageFormatToOpenGLInternalFormat(desc.ImageFormat);
+        glTextureStorage2D(m_RendererID, 1, internalFormat, desc.ImageExtent.width, desc.ImageExtent.height);
     }
 
     Texture::~Texture()
@@ -29,7 +54,8 @@ namespace Luminx
     void Texture::SetData(const void* data)
     {
         // TODO: handle multiple formats
-        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, GL_RGB, GL_UNSIGNED_BYTE, data);
+        GLenum format = ImageFormatToOpenGLFormat(m_Description.ImageFormat);
+        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, format, GL_UNSIGNED_BYTE, data);
     }
 
     void Texture::BindTextureUnit(u32 textureUnit)
@@ -38,11 +64,10 @@ namespace Luminx
     }
 }
 
-void* Luminx::Utils::LoadImageFromDisk(const std::string_view& path, i32& width, i32& height)
+void* Luminx::Utils::LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels)
 {
     stbi_set_flip_vertically_on_load(1);
     stbi_uc* data = nullptr;
-    int channels = 0;
     data = stbi_load(path.data(), &width, &height, &channels, 0);
     return data;
 }

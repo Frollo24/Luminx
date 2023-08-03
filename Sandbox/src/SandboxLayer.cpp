@@ -22,7 +22,14 @@ void SandboxLayer::OnAttach()
 	// Load image data
 	i32 imageWidth;
 	i32 imageHeight;
-	void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-wood.jpg", imageWidth, imageHeight);
+	i32 imageChannels;
+
+#define PNG 1
+#if PNG
+	void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-brick.png", imageWidth, imageHeight, imageChannels);
+#else
+	void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-wood.jpg", imageWidth, imageHeight, imageChannels);
+#endif
 
 	// Create Pipeline from device
 	auto& pipelineState = PipelineState{};
@@ -55,6 +62,7 @@ void SandboxLayer::OnAttach()
 	// Load model
 	s_Model = CreateRef<Model>("assets/models/UVSphere.obj");
 
+#define TRANSLATE 0
 #if TRANSLATE
 	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
@@ -69,6 +77,7 @@ void SandboxLayer::OnAttach()
 	// Create texture and set texture data
 	TextureDescription textureDesc{};
 	textureDesc.ImageExtent = {(u32)imageWidth, (u32)imageHeight, 1};
+	textureDesc.ImageFormat = imageChannels == 4 ? ImageFormat::RGBA8 : ImageFormat::RGB8;
 
 	s_Texture = RenderDevice::CreateTexture(textureDesc);
 	s_Texture->SetData(imageData);

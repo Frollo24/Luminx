@@ -7,7 +7,7 @@ namespace Luminx
 	// Not pretty, but it works at the moment
 	namespace Utils
 	{
-		void* LoadImageFromDisk(const std::string_view& path, i32& width, i32& height);
+		void* LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
 		void FreeImageData(void* data);
 	}
 
@@ -16,6 +16,13 @@ namespace Luminx
 		Image1D,
 		Image2D,
 		Image3D,
+	};
+
+	enum class ImageFormat
+	{
+		None = 0,
+		RGB8,
+		RGBA8
 	};
 
 	struct ImageExtent
@@ -29,6 +36,8 @@ namespace Luminx
 	{
 		ImageType ImageType = ImageType::Image2D;
 		ImageExtent ImageExtent{1, 1, 1};
+		ImageFormat ImageFormat = ImageFormat::RGBA8;
+		bool GenerateMipmaps = true;
 	};
 
 	class Texture
