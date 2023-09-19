@@ -18,13 +18,6 @@ namespace Luminx
 		Image3D,
 	};
 
-	enum class ImageFormat
-	{
-		None = 0,
-		RGB8,
-		RGBA8
-	};
-
 	struct ImageExtent
 	{
 		u32 width;
@@ -32,11 +25,37 @@ namespace Luminx
 		u32 depth;
 	};
 
+	enum class ImageFormat
+	{
+		None = 0,
+		RGB8,
+		RGBA8
+	};
+
+	enum class TextureFilterMode
+	{
+		Nearest = 0,
+		Linear,
+		NearestMipmap,
+		LinearMipmap
+	};
+
+	enum class TextureWrapMode
+	{
+		Repeat = 0,
+		ClampEdge,
+		ClampBorder,
+		Mirror,
+		MirrorOnce
+	};
+
 	struct TextureDescription
 	{
 		ImageType ImageType = ImageType::Image2D;
 		ImageExtent ImageExtent{1, 1, 1};
 		ImageFormat ImageFormat = ImageFormat::RGBA8;
+		TextureFilterMode FilterMode = TextureFilterMode::Linear;
+		TextureWrapMode WrapMode = TextureWrapMode::Repeat;
 		bool GenerateMipmaps = true;
 	};
 
