@@ -70,9 +70,23 @@ namespace Luminx
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, wrapMode);
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, wrapMode);
 
-        // TODO: Handle multiple texture extents
+        // TODO: Handle multisampled texture
         GLenum internalFormat = ImageFormatToOpenGLInternalFormat(desc.ImageFormat);
-        glTextureStorage2D(m_RendererID, 1, internalFormat, desc.ImageExtent.width, desc.ImageExtent.height);
+        const ImageExtent& extent = desc.ImageExtent;
+        switch (desc.ImageType)
+        {
+            case ImageType::Image1D:
+                glTextureStorage1D(m_RendererID, 1, internalFormat, extent.width);
+                break;
+            case ImageType::Image2D:
+                glTextureStorage2D(m_RendererID, 1, internalFormat, extent.width, extent.height);
+                break;
+            case ImageType::Image3D:
+                glTextureStorage3D(m_RendererID, 1, internalFormat, extent.width, extent.height, extent.depth);
+                break;
+            default:
+                break;
+        }
 
         // TODO: Handle texture mipmapping
         if (desc.GenerateMipmaps)
