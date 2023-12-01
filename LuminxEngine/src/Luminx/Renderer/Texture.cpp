@@ -57,6 +57,13 @@ namespace Luminx
         }
     }
 
+    static GLsizei CalculateMipmapLevels(const ImageExtent& extent)
+    {
+        double maxElement = std::max(std::max(extent.width, extent.height), extent.depth);
+        GLsizei mipLevels = static_cast<GLsizei>(std::floor(std::log2(maxElement))) + 1;
+        return mipLevels;
+    }
+
     Texture::Texture(const TextureDescription& desc)
         : m_Description(desc)
     {
@@ -70,27 +77,27 @@ namespace Luminx
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, wrapMode);
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, wrapMode);
 
+        GLsizei mipLevels = 1;
+        if (desc.GenerateMipmaps)
+            mipLevels = CalculateMipmapLevels(desc.ImageExtent);
+
         // TODO: Handle multisampled texture
         GLenum internalFormat = ImageFormatToOpenGLInternalFormat(desc.ImageFormat);
         const ImageExtent& extent = desc.ImageExtent;
         switch (desc.ImageType)
         {
             case ImageType::Image1D:
-                glTextureStorage1D(m_RendererID, 1, internalFormat, extent.width);
+                glTextureStorage1D(m_RendererID, mipLevels, internalFormat, extent.width);
                 break;
             case ImageType::Image2D:
-                glTextureStorage2D(m_RendererID, 1, internalFormat, extent.width, extent.height);
+                glTextureStorage2D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height);
                 break;
             case ImageType::Image3D:
-                glTextureStorage3D(m_RendererID, 1, internalFormat, extent.width, extent.height, extent.depth);
+                glTextureStorage3D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height, extent.depth);
                 break;
             default:
                 break;
         }
-
-        // TODO: Handle texture mipmapping
-        if (desc.GenerateMipmaps)
-            glGenerateTextureMipmap(m_RendererID);
     }
 
     Texture::~Texture()
@@ -103,6 +110,9 @@ namespace Luminx
         // TODO: handle multiple formats
         GLenum format = ImageFormatToOpenGLFormat(m_Description.ImageFormat);
         glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, format, GL_UNSIGNED_BYTE, data);
+
+        if (m_Description.GenerateMipmaps)
+            glGenerateTextureMipmap(m_RendererID);
     }
 
     void Texture::BindTextureUnit(u32 textureUnit)
