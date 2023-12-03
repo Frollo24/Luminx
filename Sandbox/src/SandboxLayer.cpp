@@ -24,11 +24,12 @@ void SandboxLayer::OnAttach()
 	i32 imageHeight;
 	i32 imageChannels;
 
-#define PNG 1
+#define PNG 0
 #if PNG
 	void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-brick.png", imageWidth, imageHeight, imageChannels);
 #else
-	void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-wood.jpg", imageWidth, imageHeight, imageChannels);
+	// void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-wood.jpg", imageWidth, imageHeight, imageChannels);
+	void* imageData = Utils::LoadHDRImageFromDisk("assets/textures/clarens_night_02_4k.hdr", imageWidth, imageHeight, imageChannels);
 #endif
 
 	// Create Pipeline from device
@@ -77,7 +78,7 @@ void SandboxLayer::OnAttach()
 	// Create texture and set texture data
 	TextureDescription textureDesc{};
 	textureDesc.ImageExtent = {(u32)imageWidth, (u32)imageHeight, 1};
-	textureDesc.ImageFormat = imageChannels == 4 ? ImageFormat::RGBA8 : ImageFormat::RGB8;
+	textureDesc.ImageFormat = imageChannels == 4 ? ImageFormat::RGBA8 : ImageFormat::RGB16F;
 
 	s_Texture = RenderDevice::CreateTexture(textureDesc);
 	s_Texture->SetData(imageData);

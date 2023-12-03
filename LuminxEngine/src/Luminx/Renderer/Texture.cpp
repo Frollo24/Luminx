@@ -10,9 +10,11 @@ namespace Luminx
     {
         switch (format)
         {
-            case ImageFormat::None:  return GL_NONE;
-            case ImageFormat::RGB8:  return GL_RGB8;
-            case ImageFormat::RGBA8: return GL_RGBA8;
+            case ImageFormat::None:   return GL_NONE;
+            case ImageFormat::RGB8:   return GL_RGB8;
+            case ImageFormat::RGBA8:  return GL_RGBA8;
+            case ImageFormat::RGB9E5: return GL_RGB9_E5;
+            case ImageFormat::RGB16F: return GL_RGB16F;
             default:
                 return GL_NONE;
         }
@@ -22,9 +24,25 @@ namespace Luminx
     {
         switch (format)
         {
-            case ImageFormat::None:  return GL_NONE;
-            case ImageFormat::RGB8:  return GL_RGB;
-            case ImageFormat::RGBA8: return GL_RGBA;
+            case ImageFormat::None:   return GL_NONE;
+            case ImageFormat::RGB8:   return GL_RGB;
+            case ImageFormat::RGBA8:  return GL_RGBA;
+            case ImageFormat::RGB9E5: return GL_RGB;
+            case ImageFormat::RGB16F: return GL_RGB;
+            default:
+                return GL_NONE;
+        }
+    }
+
+    static GLenum ImageFormatToOpenGLType(ImageFormat format)
+    {
+        switch (format)
+        {
+            case ImageFormat::None:   return GL_NONE;
+            case ImageFormat::RGB8:   return GL_UNSIGNED_BYTE;
+            case ImageFormat::RGBA8:  return GL_UNSIGNED_BYTE;
+            case ImageFormat::RGB9E5: return GL_UNSIGNED_BYTE;
+            case ImageFormat::RGB16F: return GL_FLOAT;
             default:
                 return GL_NONE;
         }
@@ -107,9 +125,24 @@ namespace Luminx
 
     void Texture::SetData(const void* data)
     {
-        // TODO: handle multiple formats
         GLenum format = ImageFormatToOpenGLFormat(m_Description.ImageFormat);
-        glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, format, GL_UNSIGNED_BYTE, data);
+        GLenum type = ImageFormatToOpenGLType(m_Description.ImageFormat);
+
+        switch (m_Description.ImageType)
+        {
+            case ImageType::Image1D:
+                glTextureSubImage1D(m_RendererID, 0, 0, m_Description.ImageExtent.width, format, type, data);
+                break;
+            case ImageType::Image2D:
+                glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, format, type, data);
+                break;
+            case ImageType::Image3D:
+                glTextureSubImage3D(m_RendererID, 0, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, m_Description.ImageExtent.depth,
+                    format, type, data);
+                break;
+            default:
+                break;
+        }
 
         if (m_Description.GenerateMipmaps)
             glGenerateTextureMipmap(m_RendererID);
@@ -126,6 +159,14 @@ void* Luminx::Utils::LoadImageFromDisk(const std::string_view& path, i32& width,
     stbi_set_flip_vertically_on_load(1);
     stbi_uc* data = nullptr;
     data = stbi_load(path.data(), &width, &height, &channels, 0);
+    return data;
+}
+
+void* Luminx::Utils::LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels)
+{
+    stbi_set_flip_vertically_on_load(1);
+    float* data = nullptr;
+    data = stbi_loadf(path.data(), &width, &height, &channels, 0);
     return data;
 }
 

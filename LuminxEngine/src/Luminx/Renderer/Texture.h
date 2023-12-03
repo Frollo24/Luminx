@@ -8,6 +8,7 @@ namespace Luminx
 	namespace Utils
 	{
 		void* LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
+		void* LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
 		void FreeImageData(void* data);
 	}
 
@@ -29,7 +30,9 @@ namespace Luminx
 	{
 		None = 0,
 		RGB8,
-		RGBA8
+		RGBA8,
+		RGB9E5,
+		RGB16F
 	};
 
 	enum class TextureFilterMode
