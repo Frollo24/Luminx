@@ -3,6 +3,7 @@
 
 #include "Luminx/Window/WindowSystem.h"
 #include "Luminx/Renderer/Renderer.h"
+#include "Luminx/Renderer/RenderCommand.h"
 
 namespace Luminx
 {
@@ -89,6 +90,7 @@ namespace Luminx
 		}
 
 		m_Window->SetMinimized(false);
+		RenderCommand::SetViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 		return false;
 	}
 }

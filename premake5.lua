@@ -21,5 +21,9 @@ group "Dependencies"
 	include "LuminxEngine/vendor/imgui"
 group ""
 
+group "Apps"
+	include "Apps/TriangleApp"
+group ""
+
 include "LuminxEngine"
 include "Sandbox"
