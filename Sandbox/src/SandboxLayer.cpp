@@ -2,12 +2,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 using namespace Luminx;
 
-static Ref<Pipeline> s_Pipeline = nullptr;
 static Ref<Pipeline> s_ModelPipeline = nullptr;
 static Ref<Pipeline> s_TexturePipeline = nullptr;
-static Ref<VertexArray> s_VertexArray = nullptr;
-static Ref<Buffer> s_VertexBuffer = nullptr;
-static Ref<Buffer> s_IndexBuffer = nullptr;
+static Ref<Pipeline> s_AlphaPipeline = nullptr;
 
 static Ref<Model> s_Model = nullptr;
 static Ref<Texture> s_Texture = nullptr;
@@ -15,16 +12,16 @@ static Ref<Texture> s_Texture = nullptr;
 void SandboxLayer::OnAttach()
 {
 	// Load Shaders
-	auto& triangleShader = CreateRef<Shader>("assets/shaders/Triangle.glsl");
 	auto& modelShader = CreateRef<Shader>("assets/shaders/TestModel.glsl");
 	auto& textureShader = CreateRef<Shader>("assets/shaders/TestTexture.glsl");
+	auto& alphaShader = CreateRef<Shader>("assets/shaders/TestAlpha.glsl");
 
 	// Load image data
 	i32 imageWidth;
 	i32 imageHeight;
 	i32 imageChannels;
 
-#define PNG 0
+#define PNG 1
 #if PNG
 	void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-brick.png", imageWidth, imageHeight, imageChannels);
 #else
@@ -33,32 +30,14 @@ void SandboxLayer::OnAttach()
 #endif
 
 	// Create Pipeline from device
+	auto& blendState = PipelineBlendState{};
+	blendState.SrcColorFactor = BlendFactor::SrcAlpha;
+	blendState.DstColorFactor = BlendFactor::OneMinusSrcAlpha;
 	auto& pipelineState = PipelineState{};
-	s_Pipeline = RenderDevice::CreatePipeline(pipelineState, triangleShader);
+	pipelineState.BlendState = blendState;
 	s_ModelPipeline = RenderDevice::CreatePipeline(pipelineState, modelShader);
 	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
-
-	s_VertexArray = CreateRef<VertexArray>(); // TODO: handled by device
-
-	// Create buffer
-	float triangleVertices[] = {
-		 0.0f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-	};
-
-	BufferDescription vertexBufferDesc{};
-	vertexBufferDesc.Type = BufferType::Vertex;
-	vertexBufferDesc.Size = sizeof(triangleVertices);
-	vertexBufferDesc.Data = triangleVertices;
-	s_VertexBuffer = RenderDevice::CreateBuffer(vertexBufferDesc);
-
-	BufferLayout layout = {
-		{ ShaderDataType::Float3, "a_Position" },
-		{ ShaderDataType::Float3, "a_Color" },
-	};
-
-	s_VertexArray->AddVertexBuffer(s_VertexBuffer, layout);
+	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
 
 	// Load model
 	s_Model = CreateRef<Model>("assets/models/UVSphere.obj");
@@ -74,6 +53,8 @@ void SandboxLayer::OnAttach()
 #endif
 	modelShader->SetMat4("u_ModelViewProj", modelViewProj);
 	textureShader->SetMat4("u_ModelViewProj", modelViewProj);
+	alphaShader->SetMat4("u_ModelViewProj", modelViewProj);
+	alphaShader->SetFloat("u_AlphaValue", 0.6);
 
 	// Create texture and set texture data
 	TextureDescription textureDesc{};
@@ -89,23 +70,18 @@ void SandboxLayer::OnAttach()
 void SandboxLayer::OnDetach()
 {
 	RenderDevice::DestroyTexture(s_Texture);
-	RenderDevice::DestroyPipeline(s_Pipeline);
-	RenderDevice::DestroyBuffer(s_IndexBuffer);
-	RenderDevice::DestroyBuffer(s_VertexBuffer);
+	RenderDevice::DestroyPipeline(s_ModelPipeline);
+	RenderDevice::DestroyPipeline(s_TexturePipeline);
 }
 
 void SandboxLayer::OnUpdate()
 {
-#define SHOW_TRIANGLE 0
-#if SHOW_TRIANGLE
-	s_Pipeline->Bind();
-	Renderer::Submit(s_VertexArray);
-#endif
-#define USE_TEXTURE 1
+#define USE_TEXTURE 0
 #if USE_TEXTURE
 	s_TexturePipeline->Bind();
 #else
-	s_ModelPipeline->Bind();
+	// s_ModelPipeline->Bind();
+	s_AlphaPipeline->Bind();
 #endif
 	s_Model->Render();
 }

@@ -13,6 +13,7 @@ namespace Luminx
 	void Pipeline::Bind()
 	{
 		RenderCommand::SetDepthState(m_State.DepthState);
+		RenderCommand::SetBlendState(m_State.BlendState);
 		m_Shader->Use();
 	}
 }

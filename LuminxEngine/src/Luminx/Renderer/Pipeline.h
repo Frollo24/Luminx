@@ -10,6 +10,7 @@ namespace Luminx
 	struct PipelineState
 	{
 		PipelineDepthState DepthState{};
+		PipelineBlendState BlendState{};
 	};
 
 	class Pipeline
