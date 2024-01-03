@@ -76,7 +76,7 @@ namespace Luminx
 	static GLuint Compile(const std::unordered_map<ShaderType, std::stringstream>& shaderSources)
 	{
 		GLuint program = glCreateProgram();
-		std::array<GLuint, (int)ShaderType::Count> glShaderIDs{};
+		std::array<GLuint, (int)ShaderType::Count - 1> glShaderIDs{};  // ShaderType::None is also a shader type
 		int shaderIndex = 0;
 		for (auto& [type, stream] : shaderSources) {
 			if (type == ShaderType::None) continue;
