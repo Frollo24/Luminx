@@ -73,9 +73,29 @@ namespace Luminx
 		}
 	}
 
+	void OpenGLDebugCallback(GLenum source, GLenum type, unsigned id, GLenum severity, int length, const char* message, const void* userParam)
+	{
+		switch (severity)
+		{
+			case GL_DEBUG_SEVERITY_HIGH:         LUM_CORE_ERROR(message); return;
+			case GL_DEBUG_SEVERITY_MEDIUM:       LUM_CORE_WARN(message); return;
+			case GL_DEBUG_SEVERITY_LOW:          LUM_CORE_INFO(message); return;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: LUM_CORE_TRACE(message); return;
+			default:
+				LUM_CORE_ASSERT(false, "Unknown severity level!");
+				break;
+		}
+	}
+
 	void RenderCommand::Init()
 	{
-		// TODO: include OpenGL debug callback
+#ifdef LUM_DEBUG
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(OpenGLDebugCallback, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
+#endif // LUM_DEBUG
+
 		glEnable(GL_FRAMEBUFFER_SRGB);
 		glEnable(GL_CULL_FACE);
 	}

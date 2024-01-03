@@ -1,5 +1,6 @@
 # Build Directories
 
+/Apps/build/
 /build/bin/
 /build/int/
 
