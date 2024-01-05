@@ -15,6 +15,7 @@
 // Renderer
 #include "Luminx/Renderer/Renderer.h"
 #include "Luminx/Renderer/RenderDevice.h"
+#include "Luminx/Renderer/RenderCommand.h"
 
 // Scene
 #include "Luminx/Scene/Model.h"

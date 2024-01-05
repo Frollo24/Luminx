@@ -207,6 +207,13 @@ namespace Luminx
 		glBindVertexArray(vertexArray->GetRendererID());
 	}
 
+	void RenderCommand::BindUniformBuffer(const Ref<Buffer>& uniformBuffer, u32 index)
+	{
+		LUM_CORE_ASSERT(uniformBuffer->GetDescription().Type == BufferType::Uniform,
+			"Trying to bind a buffer which is not a Uniform Buffer Object!");
+		glBindBufferBase(GL_UNIFORM_BUFFER, index, uniformBuffer->GetRendererID());
+	}
+
 	void RenderCommand::DrawVertices(u32 vertexCount, u32 firstVertex)
 	{
 		glDrawArrays(GL_TRIANGLES, firstVertex, vertexCount);

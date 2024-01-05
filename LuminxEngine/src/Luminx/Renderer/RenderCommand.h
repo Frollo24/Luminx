@@ -22,6 +22,7 @@ namespace Luminx
 		static void SetPolygonState(const PipelinePolygonState& polygonState);
 
 		static void BindVertexArray(const Ref<VertexArray>& vertexArray);
+		static void BindUniformBuffer(const Ref<Buffer>& uniformBuffer, u32 index);
 		static void DrawVertices(u32 vertexCount, u32 firstIndex = 0);
 		static void DrawIndices(u32 indexCount, IndexType type = IndexType::U32);
 	};

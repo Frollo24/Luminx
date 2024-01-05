@@ -20,9 +20,14 @@ layout(location = 0) in vec3 v_Normal;
 
 layout(location = 0) out vec4 o_Color;
 
+layout(std140, binding = 0) uniform TestData{
+	vec4 testVector;
+};
+
 uniform float u_AlphaValue;
 
 void main(){
 	vec3 normColor = v_Normal * 0.5 + 0.5;
+	normColor *= testVector.rgb;
 	o_Color = vec4(normColor, u_AlphaValue);
 }

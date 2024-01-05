@@ -9,6 +9,8 @@ static Ref<Pipeline> s_AlphaPipeline = nullptr;
 static Ref<Model> s_Model = nullptr;
 static Ref<Texture> s_Texture = nullptr;
 
+static Ref<Buffer> s_UniformBuffer = nullptr;
+
 void SandboxLayer::OnAttach()
 {
 	// Load Shaders
@@ -68,10 +70,21 @@ void SandboxLayer::OnAttach()
 	s_Texture->SetData(imageData);
 	s_Texture->BindTextureUnit(0);
 	Utils::FreeImageData(imageData);
+
+	// Create uniform buffer
+	glm::vec4 testData = { 0.8f, 0.3f, 0.2f, 1.0f };
+
+	BufferDescription uniformBufferDesc{};
+	uniformBufferDesc.Type = BufferType::Uniform;
+	uniformBufferDesc.Size = sizeof(glm::vec4);
+	uniformBufferDesc.Data = &testData;
+	s_UniformBuffer = RenderDevice::CreateBuffer(uniformBufferDesc);
+	RenderCommand::BindUniformBuffer(s_UniformBuffer, 0);
 }
 
 void SandboxLayer::OnDetach()
 {
+	RenderDevice::DestroyBuffer(s_UniformBuffer);
 	RenderDevice::DestroyTexture(s_Texture);
 	RenderDevice::DestroyPipeline(s_ModelPipeline);
 	RenderDevice::DestroyPipeline(s_TexturePipeline);

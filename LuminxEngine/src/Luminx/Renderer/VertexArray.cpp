@@ -47,7 +47,8 @@ namespace Luminx
 
 	void VertexArray::AddVertexBuffer(const Ref<Buffer>& buffer, const BufferLayout& layout)
 	{
-		LUM_CORE_VERIFY(buffer->GetDescription().Type == BufferType::Vertex);
+		LUM_CORE_ASSERT(buffer->GetDescription().Type == BufferType::Vertex,
+			"Trying to add a buffer which is not a Vertex Buffer Object!");
 
 		for (const auto& element : layout.GetElements())
 		{
@@ -108,7 +109,9 @@ namespace Luminx
 
 	void VertexArray::SetIndexBuffer(const Ref<Buffer>& buffer, const IndexType& size)
 	{
-		LUM_CORE_VERIFY(buffer->GetDescription().Type == BufferType::Index);
+		LUM_CORE_ASSERT(buffer->GetDescription().Type == BufferType::Index,
+			"Trying to set a buffer which is not a Index Buffer Object!");
+
 		glVertexArrayElementBuffer(m_RendererID, buffer->GetRendererID());
 		m_IndexType = size;
 		m_IndexBuffer = buffer;

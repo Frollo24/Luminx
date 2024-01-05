@@ -163,8 +163,8 @@ namespace Luminx
 
 	GLint Shader::GetUniformLocation(const std::string& name) const
 	{
-		auto locationCache = m_UniformLocationCache.find(name);
-		if (locationCache != m_UniformLocationCache.end()) return locationCache->second;
+		if (auto locationCache = m_UniformLocationCache.find(name);
+			locationCache != m_UniformLocationCache.end()) return locationCache->second;
 
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		m_UniformLocationCache[name] = location;

@@ -6,7 +6,7 @@ namespace Luminx
 {
 	enum class BufferType
 	{
-		Vertex, Index
+		Vertex, Index, Uniform
 	};
 
 	struct BufferDescription
