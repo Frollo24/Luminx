@@ -33,8 +33,11 @@ void SandboxLayer::OnAttach()
 	auto& blendState = PipelineBlendState{};
 	blendState.SrcColorFactor = BlendFactor::SrcAlpha;
 	blendState.DstColorFactor = BlendFactor::OneMinusSrcAlpha;
+	auto& polygonState = PipelinePolygonState{};
+	polygonState.PolygonMode = PolygonRasterMode::Fill;
 	auto& pipelineState = PipelineState{};
 	pipelineState.BlendState = blendState;
+	pipelineState.PolygonState = polygonState;
 	s_ModelPipeline = RenderDevice::CreatePipeline(pipelineState, modelShader);
 	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
 	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);

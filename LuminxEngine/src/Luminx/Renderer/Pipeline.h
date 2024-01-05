@@ -11,6 +11,7 @@ namespace Luminx
 	{
 		PipelineDepthState DepthState{};
 		PipelineBlendState BlendState{};
+		PipelinePolygonState PolygonState{};
 	};
 
 	class Pipeline

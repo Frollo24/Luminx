@@ -68,4 +68,34 @@ namespace Luminx
 		BlendConstants ConstantColor{};
 	};
 #pragma endregion
+
+#pragma region PipelinePolygonState
+	enum class PolygonRasterMode
+	{
+		Fill,
+		Line,
+		Point
+	};
+
+	enum class CullingMode
+	{
+		Front,
+		Back,
+		FrontAndBack
+	};
+
+	enum class FrontFaceMode
+	{
+		CounterClockwise,
+		Clockwise
+	};
+
+	struct PipelinePolygonState
+	{
+		PolygonRasterMode PolygonMode = PolygonRasterMode::Fill;
+		CullingMode CullMode = CullingMode::Back;
+		FrontFaceMode FrontFace = FrontFaceMode::Clockwise;
+		bool CullEnable = true;
+	};
+#pragma endregion
 }

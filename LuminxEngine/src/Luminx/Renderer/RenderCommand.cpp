@@ -7,9 +7,9 @@ namespace Luminx
 {
 	namespace Utils
 	{
-		static GLenum DepthComparisonToGLDepthFunc(DepthComparison comp)
+		static GLenum DepthComparisonToGLDepthFunc(DepthComparison comparison)
 		{
-			switch (comp)
+			switch (comparison)
 			{
 				case DepthComparison::None:           return GL_NEVER;
 				case DepthComparison::Less:			  return GL_LESS;
@@ -61,6 +61,41 @@ namespace Luminx
 			}
 		}
 
+		static GLenum PolygonRasterModeToGLPolygonMode(PolygonRasterMode polygonMode)
+		{
+			switch (polygonMode)
+			{
+				case PolygonRasterMode::Fill:  return GL_FILL;
+				case PolygonRasterMode::Line:  return GL_LINE;
+				case PolygonRasterMode::Point: return GL_POINT;
+				default:
+					return GL_NONE;
+			}
+		}
+
+		static GLenum CullingModeToGLCullFace(CullingMode culling)
+		{
+			switch (culling)
+			{
+				case CullingMode::Front:        return GL_FRONT;
+				case CullingMode::Back:         return GL_BACK;
+				case CullingMode::FrontAndBack: return GL_FRONT_AND_BACK;
+				default:
+					return GL_NONE;
+			}
+		}
+
+		static GLenum FrontFaceModeToGLFrontFace(FrontFaceMode frontFace)
+		{
+			switch (frontFace)
+			{
+				case FrontFaceMode::CounterClockwise: return GL_CCW;
+				case FrontFaceMode::Clockwise:        return GL_CW;
+				default:
+					break;
+			}
+		}
+
 		static GLenum IndexTypeToOpenGLType(const IndexType& type)
 		{
 			switch (type)
@@ -97,7 +132,6 @@ namespace Luminx
 #endif // LUM_DEBUG
 
 		glEnable(GL_FRAMEBUFFER_SRGB);
-		glEnable(GL_CULL_FACE);
 	}
 
 	void RenderCommand::Shutdown()
@@ -155,6 +189,17 @@ namespace Luminx
 			Utils::BlendFactorToGLBlendFactor(blendState.DstAlphaFactor)
 		);
 		glBlendEquation(Utils::BlendEquationToGLBlendEquation(blendState.Equation));
+	}
+
+	void RenderCommand::SetPolygonState(const PipelinePolygonState& polygonState)
+	{
+		if (!polygonState.CullEnable)
+			glDisable(GL_CULL_FACE);
+		else
+			glEnable(GL_CULL_FACE);
+		glFrontFace(Utils::FrontFaceModeToGLFrontFace(polygonState.FrontFace));
+		glCullFace(Utils::CullingModeToGLCullFace(polygonState.CullMode));
+		glPolygonMode(GL_FRONT_AND_BACK, Utils::PolygonRasterModeToGLPolygonMode(polygonState.PolygonMode));
 	}
 
 	void RenderCommand::BindVertexArray(const Ref<VertexArray>& vertexArray)

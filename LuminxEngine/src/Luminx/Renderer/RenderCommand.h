@@ -18,7 +18,8 @@ namespace Luminx
 		static void SetViewport(u32 x, u32 y, u32 width, u32 height);
 		static void SetDefaultState();  // TODO: implement
 		static void SetDepthState(const PipelineDepthState& depthState);
-		static void SetBlendState(const PipelineBlendState& depthState);
+		static void SetBlendState(const PipelineBlendState& blendState);
+		static void SetPolygonState(const PipelinePolygonState& polygonState);
 
 		static void BindVertexArray(const Ref<VertexArray>& vertexArray);
 		static void DrawVertices(u32 vertexCount, u32 firstIndex = 0);
