@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Luminx/Renderer/PipelineState.h"
+#include "Luminx/Renderer/Pipeline.h"
 #include "Luminx/Renderer/VertexArray.h"
 #include "Luminx/Renderer/BufferLayout.h"
 
@@ -16,7 +16,7 @@ namespace Luminx
 		static void EndFrame();
 
 		static void SetViewport(u32 x, u32 y, u32 width, u32 height);
-		static void SetDefaultState();  // TODO: implement
+		static void SetDefaultState(const PipelineState& defaultState);
 		static void SetDepthState(const PipelineDepthState& depthState);
 		static void SetBlendState(const PipelineBlendState& blendState);
 		static void SetPolygonState(const PipelinePolygonState& polygonState);

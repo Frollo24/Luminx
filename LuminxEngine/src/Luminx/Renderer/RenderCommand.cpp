@@ -156,9 +156,11 @@ namespace Luminx
 		glViewport(x, y, width, height);
 	}
 
-	void RenderCommand::SetDefaultState()
+	void RenderCommand::SetDefaultState(const PipelineState& defaultState)
 	{
-		// TODO: implement
+		RenderCommand::SetDepthState(defaultState.DepthState);
+		RenderCommand::SetBlendState(defaultState.BlendState);
+		RenderCommand::SetPolygonState(defaultState.PolygonState);
 	}
 
 	void RenderCommand::SetDepthState(const PipelineDepthState& depthState)
