@@ -6,6 +6,31 @@
 
 namespace Luminx
 {
+    static GLenum GetOpenGLTarget(const TextureDescription& desc)
+    {
+        if ((int)(desc.SampleCount) > 1)
+        {
+            switch (desc.ImageType)
+            {
+                case ImageType::Image2D: return GL_TEXTURE_2D_MULTISAMPLE;
+                case ImageType::Image3D: return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
+                default:
+                    return GL_NONE;
+            }
+        }
+        else
+        {
+            switch (desc.ImageType)
+            {
+                case ImageType::Image1D: return GL_TEXTURE_1D;
+                case ImageType::Image2D: return GL_TEXTURE_2D;
+                case ImageType::Image3D: return GL_TEXTURE_3D;
+                default:
+                    return GL_NONE;
+            }
+        }
+    }
+
     static GLenum ImageFormatToOpenGLInternalFormat(ImageFormat format)
     {
         switch (format)
@@ -85,36 +110,57 @@ namespace Luminx
     Texture::Texture(const TextureDescription& desc)
         : m_Description(desc)
     {
-        glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+        GLenum target = GetOpenGLTarget(desc);
+        glCreateTextures(target, 1, &m_RendererID);
 
-        GLenum filterMode = TextureFilterModeToOpenGLFilterMode(desc.FilterMode);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, filterMode);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, filterMode == GL_NEAREST ? filterMode : GL_LINEAR);
+        bool isMultisampled = (int)(desc.SampleCount) > 1;
+        if (!isMultisampled)
+        {
+            GLenum filterMode = TextureFilterModeToOpenGLFilterMode(desc.FilterMode);
+            glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, filterMode);
+            glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, filterMode == GL_NEAREST ? filterMode : GL_LINEAR);
 
-        GLenum wrapMode = TextureWrapModeToOpenGLWrapMode(desc.WrapMode);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, wrapMode);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, wrapMode);
+            GLenum wrapMode = TextureWrapModeToOpenGLWrapMode(desc.WrapMode);
+            glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, wrapMode);
+            glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, wrapMode);
+        }
 
         GLsizei mipLevels = 1;
         if (desc.GenerateMipmaps)
             mipLevels = CalculateMipmapLevels(desc.ImageExtent);
 
-        // TODO: Handle multisampled texture
         GLenum internalFormat = ImageFormatToOpenGLInternalFormat(desc.ImageFormat);
         const ImageExtent& extent = desc.ImageExtent;
-        switch (desc.ImageType)
+        if (isMultisampled)
         {
-            case ImageType::Image1D:
-                glTextureStorage1D(m_RendererID, mipLevels, internalFormat, extent.width);
-                break;
-            case ImageType::Image2D:
-                glTextureStorage2D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height);
-                break;
-            case ImageType::Image3D:
-                glTextureStorage3D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height, extent.depth);
-                break;
-            default:
-                break;
+            switch (desc.ImageType)
+            {
+                case ImageType::Image2D:
+                    glTextureStorage2DMultisample(m_RendererID, (GLsizei)desc.SampleCount, internalFormat, extent.width, extent.height, GL_FALSE);
+                    break;
+                case ImageType::Image3D:
+                    glTextureStorage3DMultisample(m_RendererID, (GLsizei)desc.SampleCount, internalFormat, extent.width, extent.height, extent.depth, GL_FALSE);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            switch (desc.ImageType)
+            {
+                case ImageType::Image1D:
+                    glTextureStorage1D(m_RendererID, mipLevels, internalFormat, extent.width);
+                    break;
+                case ImageType::Image2D:
+                    glTextureStorage2D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height);
+                    break;
+                case ImageType::Image3D:
+                    glTextureStorage3D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height, extent.depth);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

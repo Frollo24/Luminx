@@ -52,6 +52,17 @@ namespace Luminx
 		MirrorOnce
 	};
 
+	enum class SampleCount
+	{
+		Count64 = 64,
+		Count32 = 32,
+		Count16 = 16,
+		Count8 = 8,
+		Count4 = 4,
+		Count2 = 2,
+		Count1 = 1,
+	};
+
 	struct TextureDescription
 	{
 		ImageType ImageType = ImageType::Image2D;
@@ -59,6 +70,7 @@ namespace Luminx
 		ImageFormat ImageFormat = ImageFormat::RGBA8;
 		TextureFilterMode FilterMode = TextureFilterMode::Linear;
 		TextureWrapMode WrapMode = TextureWrapMode::Repeat;
+		SampleCount SampleCount = SampleCount::Count1;
 		bool GenerateMipmaps = true;
 	};
 

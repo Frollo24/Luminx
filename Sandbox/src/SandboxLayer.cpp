@@ -8,6 +8,7 @@ static Ref<Pipeline> s_AlphaPipeline = nullptr;
 
 static Ref<Model> s_Model = nullptr;
 static Ref<Texture> s_Texture = nullptr;
+static Ref<Texture> s_MultisampledTexture = nullptr;
 
 static Ref<Buffer> s_UniformBuffer = nullptr;
 
@@ -70,6 +71,10 @@ void SandboxLayer::OnAttach()
 	s_Texture->SetData(imageData);
 	s_Texture->BindTextureUnit(0);
 	Utils::FreeImageData(imageData);
+
+	// Create multisampled texture with no data
+	textureDesc.SampleCount = SampleCount::Count8;
+	s_MultisampledTexture = RenderDevice::CreateTexture(textureDesc);
 
 	// Create uniform buffer
 	glm::vec4 testData = { 0.8f, 0.3f, 0.2f, 1.0f };
