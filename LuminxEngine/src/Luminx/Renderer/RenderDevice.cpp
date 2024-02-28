@@ -32,4 +32,14 @@ namespace Luminx
 	{
 		texture = nullptr;
 	}
+
+	Ref<Framebuffer> RenderDevice::CreateFramebuffer(const FramebufferDescription& framebufferDescription)
+	{
+		return CreateRef<Framebuffer>(framebufferDescription);
+	}
+
+	void RenderDevice::DestroyFramebuffer(Ref<Framebuffer>& framebuffer)
+	{
+		framebuffer = nullptr;
+	}
 }

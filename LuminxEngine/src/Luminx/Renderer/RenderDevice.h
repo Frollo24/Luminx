@@ -4,6 +4,7 @@
 #include "Luminx/Renderer/Buffer.h"
 #include "Luminx/Renderer/Pipeline.h"
 #include "Luminx/Renderer/Texture.h"
+#include "Luminx/Renderer/Framebuffer.h"
 
 namespace Luminx
 {
@@ -21,5 +22,8 @@ namespace Luminx
 
 		static Ref<Texture> CreateTexture(const TextureDescription& textureDescription);
 		static void DestroyTexture(Ref<Texture>& texture);
+
+		static Ref<Framebuffer> CreateFramebuffer(const FramebufferDescription& framebufferDescription);
+		static void DestroyFramebuffer(Ref<Framebuffer>& framebuffer);
 	};
 }

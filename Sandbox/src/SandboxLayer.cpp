@@ -9,6 +9,7 @@ static Ref<Pipeline> s_AlphaPipeline = nullptr;
 static Ref<Model> s_Model = nullptr;
 static Ref<Texture> s_Texture = nullptr;
 static Ref<Texture> s_MultisampledTexture = nullptr;
+static Ref<Framebuffer> s_Framebuffer = nullptr;
 
 static Ref<Buffer> s_UniformBuffer = nullptr;
 
@@ -76,6 +77,12 @@ void SandboxLayer::OnAttach()
 	textureDesc.SampleCount = SampleCount::Count8;
 	s_MultisampledTexture = RenderDevice::CreateTexture(textureDesc);
 
+	// Create framebuffer and attach texture
+	FramebufferDescription framebufferDesc{};
+	framebufferDesc.Attachments.push_back(AttachmentType::Color);
+	framebufferDesc.RenderTargets.push_back(s_MultisampledTexture);
+	s_Framebuffer = RenderDevice::CreateFramebuffer(framebufferDesc);
+
 	// Create uniform buffer
 	glm::vec4 testData = { 0.8f, 0.3f, 0.2f, 1.0f };
 
@@ -93,6 +100,8 @@ void SandboxLayer::OnDetach()
 	RenderDevice::DestroyTexture(s_Texture);
 	RenderDevice::DestroyPipeline(s_ModelPipeline);
 	RenderDevice::DestroyPipeline(s_TexturePipeline);
+	RenderDevice::DestroyFramebuffer(s_Framebuffer);
+	RenderDevice::DestroyTexture(s_MultisampledTexture);
 }
 
 void SandboxLayer::OnUpdate()
@@ -105,4 +114,10 @@ void SandboxLayer::OnUpdate()
 	s_AlphaPipeline->Bind();
 #endif
 	s_Model->Render();
+
+	// TODO: Create render passes
+	s_Framebuffer->Bind();
+	s_AlphaPipeline->Bind();
+	s_Model->Render();
+	s_Framebuffer->Unbind();
 }
