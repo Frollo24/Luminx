@@ -22,6 +22,9 @@ namespace Luminx
 
 	void Window::OnUpdate()
 	{
+		if (m_Data.WasResized)
+			m_Data.WasResized = false;
+
 		glfwPollEvents();
 		m_RenderContext->SwapBuffers();
 	}

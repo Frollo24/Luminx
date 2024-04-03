@@ -34,7 +34,7 @@ namespace Luminx
 		void Bind();
 		void Unbind();
 
-		// TODO: handle framebuffer resize
+		void Resize(u32 width, u32 height);
 
 	private:
 		FramebufferDescription m_Description{};

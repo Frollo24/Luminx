@@ -121,3 +121,18 @@ void SandboxLayer::OnUpdate()
 	s_Model->Render();
 	s_Framebuffer->Unbind();
 }
+
+void SandboxLayer::OnEvent(Event& e)
+{
+	EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<WindowResizeEvent>(LUM_BIND_EVENT_FN(SandboxLayer::OnWindowResize));
+}
+
+bool SandboxLayer::OnWindowResize(WindowResizeEvent& e)
+{
+	if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		return false;
+
+	s_Framebuffer->Resize(e.GetWidth(), e.GetHeight());
+	return false;
+}

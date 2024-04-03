@@ -1,5 +1,6 @@
 #include "lumpch.h"
 #include "Framebuffer.h"
+#include "RenderDevice.h"
 
 #include <glad/glad.h>
 
@@ -44,5 +45,37 @@ namespace Luminx
 	void Framebuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Framebuffer::Resize(u32 width, u32 height)
+	{
+		m_Description.Width = width;
+		m_Description.Height = height;
+
+		std::vector<TextureDescription> resizedDescs;
+		resizedDescs.reserve(m_Description.RenderTargets.size());
+
+		for (auto& renderTarget : m_Description.RenderTargets)
+		{
+			TextureDescription newTexDesc{};
+			newTexDesc.ImageExtent = { width, height, 1 };
+			newTexDesc.ImageFormat = renderTarget->GetDescription().ImageFormat;
+			newTexDesc.SampleCount = renderTarget->GetDescription().SampleCount;
+			resizedDescs.push_back(newTexDesc);
+
+			RenderDevice::DestroyTexture(renderTarget);
+		}
+
+		m_Description.RenderTargets.clear();
+
+		for (int i = 0; i < resizedDescs.size(); i++)
+		{
+			const Ref<Texture>& renderTarget = RenderDevice::CreateTexture(resizedDescs[i]);
+			const AttachmentType& attachment = m_Description.Attachments[i];
+			glNamedFramebufferTexture(m_RendererID, AttachmentTypeToOpenGLAttachment(attachment), renderTarget->GetRendererID(), 0);
+			m_Description.RenderTargets.push_back(renderTarget);
+		}
+
+		LUM_CORE_TRACE("Framebuffer Resized!");
 	}
 }
