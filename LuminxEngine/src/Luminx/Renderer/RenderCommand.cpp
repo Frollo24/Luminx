@@ -151,6 +151,43 @@ namespace Luminx
 		// In OpenGL this does nothing
 	}
 
+	void RenderCommand::BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues)
+	{
+		framebuffer->Bind();
+		if ((u8)(clearValues.ClearFlags & ClearFlags::Color))
+		{
+			std::array<GLfloat, 4> clearColor = { clearValues.Color.r, clearValues.Color.g, clearValues.Color.b, clearValues.Color.a };
+			glClearNamedFramebufferfv(framebuffer->GetRendererID(), GL_COLOR, 0, clearColor.data());
+		}
+
+		if (clearValues.ClearFlags == ClearFlags::DepthStencil)
+		{
+			GLfloat depth = clearValues.Depth;
+			GLint stencil = clearValues.Stencil;
+			glClearNamedFramebufferfi(framebuffer->GetRendererID(), GL_DEPTH_STENCIL, 0, depth, stencil);
+		}
+		else if ((u8)(clearValues.ClearFlags & ClearFlags::Depth))
+		{
+			GLfloat depth = clearValues.Depth;
+			glClearNamedFramebufferfv(framebuffer->GetRendererID(), GL_DEPTH, 0, &depth);
+		}
+		else if ((u8)(clearValues.ClearFlags & ClearFlags::Stencil))
+		{
+			GLint stencil = clearValues.Stencil;
+			glClearNamedFramebufferiv(framebuffer->GetRendererID(), GL_STENCIL, 0, &stencil);
+		}
+	}
+
+	void RenderCommand::EndRenderPass()
+	{
+		// At the moment this does nothing
+	}
+
+	void RenderCommand::DefaultFramebuffer()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void RenderCommand::SetViewport(u32 x, u32 y, u32 width, u32 height)
 	{
 		glViewport(x, y, width, height);

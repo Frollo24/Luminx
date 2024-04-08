@@ -3,6 +3,7 @@
 #include "Luminx/Renderer/Pipeline.h"
 #include "Luminx/Renderer/VertexArray.h"
 #include "Luminx/Renderer/BufferLayout.h"
+#include "Luminx/Renderer/Framebuffer.h"
 
 namespace Luminx
 {
@@ -14,6 +15,10 @@ namespace Luminx
 
 		static void BeginFrame();
 		static void EndFrame();
+
+		static void BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues);
+		static void EndRenderPass();
+		static void DefaultFramebuffer();
 
 		static void SetViewport(u32 x, u32 y, u32 width, u32 height);
 		static void SetDefaultState(const PipelineState& defaultState);

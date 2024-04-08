@@ -115,11 +115,14 @@ void SandboxLayer::OnUpdate()
 #endif
 	s_Model->Render();
 
-	// TODO: Create render passes
-	s_Framebuffer->Bind();
+	ClearValues clearValues{};
+	clearValues.Color = { 1.0f, 0.6f, 0.3f, 1.0f };
+	clearValues.ClearFlags = ClearFlags::Color;
+	RenderCommand::BeginRenderPass(s_Framebuffer, clearValues);
 	s_AlphaPipeline->Bind();
 	s_Model->Render();
-	s_Framebuffer->Unbind();
+	RenderCommand::EndRenderPass();
+	RenderCommand::DefaultFramebuffer();
 }
 
 void SandboxLayer::OnEvent(Event& e)

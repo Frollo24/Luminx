@@ -3,8 +3,30 @@
 #include "Luminx/Core/Base.h"
 #include "Texture.h"
 
+#include <glm/glm.hpp>
+
 namespace Luminx
 {
+	enum class ClearFlags
+	{
+		None = 0,
+		Color = LUM_BIT(0),
+		Depth = LUM_BIT(1),
+		Stencil = LUM_BIT(2),
+		DepthStencil = Depth | Stencil,
+		All = Color | DepthStencil,
+	};
+
+	LUM_DEFINE_ENUM_FLAG_OPERATORS(ClearFlags);
+
+	struct ClearValues
+	{
+		glm::vec4 Color = glm::vec4(1.0f);
+		float Depth = 1.0f;
+		i32 Stencil = 0;
+		ClearFlags ClearFlags = ClearFlags::None;
+	};
+
 	enum class AttachmentType
 	{
 		None = 0,
