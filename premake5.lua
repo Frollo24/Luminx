@@ -23,6 +23,7 @@ group ""
 
 group "Apps"
 	include "Apps/TriangleApp"
+	include "Apps/LoadModelApp"
 group ""
 
 include "LuminxEngine"
