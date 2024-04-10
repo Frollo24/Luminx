@@ -6,7 +6,6 @@ static Ref<Pipeline> s_Pipeline = nullptr;
 static Ref<Shader> s_Shader = nullptr;
 static Ref<VertexArray> s_VertexArray = nullptr;
 static Ref<Buffer> s_VertexBuffer = nullptr;
-static Ref<Buffer> s_IndexBuffer = nullptr;
 
 void TriangleLayer::OnAttach()
 {
@@ -54,5 +53,6 @@ void TriangleLayer::OnDetach()
 void TriangleLayer::OnUpdate()
 {
 	s_Shader->Use();
-	Renderer::Submit(s_VertexArray);
+	RenderCommand::BindVertexArray(s_VertexArray);
+	RenderCommand::DrawVertices(3);
 }

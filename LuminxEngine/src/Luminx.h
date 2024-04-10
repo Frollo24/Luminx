@@ -12,6 +12,7 @@
 // Events
 #include "Luminx/Events/Event.h"
 #include "Luminx/Events/WindowEvent.h"
+#include "Luminx/Events/KeyEvent.h"
 
 // Renderer
 #include "Luminx/Renderer/Renderer.h"

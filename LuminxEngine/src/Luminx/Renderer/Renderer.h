@@ -14,8 +14,6 @@ namespace Luminx
 
 		static void BeginFrame();
 		static void EndFrame();
-
-		static void Submit(const Ref<VertexArray>& vertexArray, u32 vertexCount = 3);
 		static void Submit(const Ref<RenderEntity>& renderEntity);
 	};
 }
