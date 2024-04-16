@@ -20,6 +20,7 @@
 #include "Luminx/Renderer/RenderCommand.h"
 
 // Scene
+#include "Luminx/Scene/Camera.h"
 #include "Luminx/Scene/Model.h"
 
 // Window system
