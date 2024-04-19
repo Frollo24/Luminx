@@ -108,6 +108,8 @@ namespace Luminx
 		}
 	}
 
+	static ClearValues s_DefaultClearValues = {};
+
 	void OpenGLDebugCallback(GLenum source, GLenum type, unsigned id, GLenum severity, int length, const char* message, const void* userParam)
 	{
 		switch (severity)
@@ -132,6 +134,8 @@ namespace Luminx
 #endif // LUM_DEBUG
 
 		glEnable(GL_FRAMEBUFFER_SRGB);
+
+		s_DefaultClearValues.Color = glm::vec4(0.2f, 0.3f, 0.8f, 1.0f); // Default Color
 	}
 
 	void RenderCommand::Shutdown()
@@ -141,8 +145,10 @@ namespace Luminx
 
 	void RenderCommand::BeginFrame()
 	{
-		glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
-		glClearDepthf(1.0f);
+		glm::vec4 color = s_DefaultClearValues.Color;
+
+		glClearColor(color.r, color.g, color.b, color.a);
+		glClearDepthf(s_DefaultClearValues.Depth);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -186,6 +192,11 @@ namespace Luminx
 	void RenderCommand::DefaultFramebuffer()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void RenderCommand::DefaultClearValues(const ClearValues& clearValues)
+	{
+		s_DefaultClearValues = clearValues;
 	}
 
 	void RenderCommand::SetViewport(u32 x, u32 y, u32 width, u32 height)

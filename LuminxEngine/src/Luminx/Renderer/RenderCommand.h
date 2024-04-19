@@ -19,6 +19,7 @@ namespace Luminx
 		static void BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues);
 		static void EndRenderPass();
 		static void DefaultFramebuffer();
+		static void DefaultClearValues(const ClearValues& clearValues);
 
 		static void SetViewport(u32 x, u32 y, u32 width, u32 height);
 		static void SetDefaultState(const PipelineState& defaultState);

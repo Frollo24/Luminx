@@ -26,6 +26,7 @@ group "Apps"
 	include "Apps/LoadModelApp"
 	include "Apps/TextureApp"
 	include "Apps/CameraApp"
+	include "Apps/BasicLightingApp"
 group ""
 
 include "LuminxEngine"
