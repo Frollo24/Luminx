@@ -9,11 +9,16 @@ namespace Luminx
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& appName)
 	{
 		s_Instance = this;
 		WindowSystem::Init();
-		m_Window = WindowSystem::Create();
+
+		WindowProps props = {};
+		if (appName.size())
+			props.Title = appName;
+
+		m_Window = WindowSystem::Create(props);
 		m_Window->SetEventCallback(LUM_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();

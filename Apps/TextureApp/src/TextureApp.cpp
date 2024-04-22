@@ -6,7 +6,7 @@
 class TextureApp : public Luminx::Application
 {
 public:
-	TextureApp()
+	TextureApp() : Luminx::Application("Texture")
 	{
 		PushLayer(new TextureLayer());
 	}

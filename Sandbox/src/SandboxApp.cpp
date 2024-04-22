@@ -6,7 +6,7 @@
 class Sandbox : public Luminx::Application
 {
 public:
-	Sandbox()
+	Sandbox() : Luminx::Application("Sandbox")
 	{
 		PushLayer(new SandboxLayer());
 	}

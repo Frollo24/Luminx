@@ -6,7 +6,7 @@
 class TriangleApp : public Luminx::Application
 {
 public:
-	TriangleApp()
+	TriangleApp() : Luminx::Application("First Triangle")
 	{
 		PushLayer(new TriangleLayer());
 	}

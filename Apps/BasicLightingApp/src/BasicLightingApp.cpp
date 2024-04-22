@@ -6,7 +6,7 @@
 class BasicLightingApp : public Luminx::Application
 {
 public:
-	BasicLightingApp()
+	BasicLightingApp() : Luminx::Application("Basic Phong Lighting")
 	{
 		PushLayer(new BasicLightingLayer());
 	}

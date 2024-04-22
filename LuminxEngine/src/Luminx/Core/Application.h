@@ -13,7 +13,7 @@ namespace Luminx
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& appName = "");
 		virtual ~Application();
 		static Application& Instance() { return *s_Instance; }
 

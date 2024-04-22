@@ -110,8 +110,8 @@ void SandboxLayer::OnUpdate()
 #if USE_TEXTURE
 	s_TexturePipeline->Bind();
 #else
-	// s_ModelPipeline->Bind();
-	s_AlphaPipeline->Bind();
+	s_ModelPipeline->Bind();
+	//s_AlphaPipeline->Bind();
 #endif
 	s_Model->Render();
 

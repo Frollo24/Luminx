@@ -6,7 +6,7 @@
 class CameraApp : public Luminx::Application
 {
 public:
-	CameraApp()
+	CameraApp() : Luminx::Application("Basic Camera")
 	{
 		PushLayer(new CameraLayer());
 	}

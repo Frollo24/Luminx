@@ -6,7 +6,7 @@
 class LoadModelApp : public Luminx::Application
 {
 public:
-	LoadModelApp()
+	LoadModelApp() : Luminx::Application("Model Loading")
 	{
 		PushLayer(new LoadModelLayer());
 	}
