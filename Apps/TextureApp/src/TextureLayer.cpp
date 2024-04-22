@@ -36,8 +36,6 @@ void TextureLayer::OnAttach()
 
 	// Create Pipeline from device
 	auto& pipelineState = PipelineState{};
-	pipelineState.BlendState.BlendEnable = false;
-	pipelineState.PolygonState.FrontFace = FrontFaceMode::CounterClockwise;
 	s_Pipeline = RenderDevice::CreatePipeline(pipelineState, s_Shader);
 
 	s_VertexArray = CreateRef<VertexArray>(); // TODO: handled by device

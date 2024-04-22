@@ -13,12 +13,10 @@ void LoadModelLayer::OnAttach()
 
 	// Create Pipeline from device
 	auto& pipelineState = PipelineState{};
-	pipelineState.BlendState.BlendEnable = false;
-	pipelineState.PolygonState.FrontFace = FrontFaceMode::CounterClockwise;
 	s_Pipeline = RenderDevice::CreatePipeline(pipelineState, s_Shader);
 
 	// Load model
-	s_Model = CreateRef<Model>("assets/models/plane.obj");
+	s_Model = CreateRef<Model>("assets/models/bunny.obj");
 
 	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));

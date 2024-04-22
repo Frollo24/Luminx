@@ -25,10 +25,10 @@ namespace Luminx
 
 	struct PipelineDepthState
 	{
-		bool DepthTest = true;
-		bool DepthWrite = true;
 		DepthComparison DepthFunc = DepthComparison::Less;
 		DepthBoundaries DepthRange{};
+		bool DepthTest = true;
+		bool DepthWrite = true;
 	};
 #pragma endregion
 
@@ -59,13 +59,13 @@ namespace Luminx
 
 	struct PipelineBlendState
 	{
-		bool BlendEnable = true;
-		BlendFactor SrcColorFactor = BlendFactor::Zero;
-		BlendFactor DstColorFactor = BlendFactor::One;
-		BlendFactor SrcAlphaFactor = BlendFactor::Zero;
-		BlendFactor DstAlphaFactor = BlendFactor::One;
+		BlendFactor SrcColorFactor = BlendFactor::One;
+		BlendFactor DstColorFactor = BlendFactor::Zero;
+		BlendFactor SrcAlphaFactor = BlendFactor::One;
+		BlendFactor DstAlphaFactor = BlendFactor::Zero;
 		BlendEquation Equation = BlendEquation::Add;
 		BlendConstants ConstantColor{};
+		bool BlendEnable = true;
 	};
 #pragma endregion
 
@@ -94,7 +94,7 @@ namespace Luminx
 	{
 		PolygonRasterMode PolygonMode = PolygonRasterMode::Fill;
 		CullingMode CullMode = CullingMode::Back;
-		FrontFaceMode FrontFace = FrontFaceMode::Clockwise;
+		FrontFaceMode FrontFace = FrontFaceMode::CounterClockwise;
 		bool CullEnable = true;
 	};
 #pragma endregion
