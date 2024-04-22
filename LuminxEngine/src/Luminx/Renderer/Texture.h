@@ -12,7 +12,7 @@ namespace Luminx
 		void FreeImageData(void* data);
 	}
 
-	enum class ImageType
+	enum class ImageType : u8
 	{
 		Image1D,
 		Image2D,
@@ -26,7 +26,7 @@ namespace Luminx
 		u32 depth;
 	};
 
-	enum class ImageFormat
+	enum class ImageFormat : u8
 	{
 		None = 0,
 		RGB8,
@@ -35,7 +35,7 @@ namespace Luminx
 		RGB16F
 	};
 
-	enum class TextureFilterMode
+	enum class TextureFilterMode : u8
 	{
 		Nearest = 0,
 		Linear,
@@ -43,7 +43,7 @@ namespace Luminx
 		LinearMipmap
 	};
 
-	enum class TextureWrapMode
+	enum class TextureWrapMode : u8
 	{
 		Repeat = 0,
 		ClampEdge,
@@ -52,7 +52,7 @@ namespace Luminx
 		MirrorOnce
 	};
 
-	enum class SampleCount
+	enum class SampleCount : u8
 	{
 		Count64 = 64,
 		Count32 = 32,
@@ -65,8 +65,8 @@ namespace Luminx
 
 	struct TextureDescription
 	{
-		ImageType ImageType = ImageType::Image2D;
 		ImageExtent ImageExtent{1, 1, 1};
+		ImageType ImageType = ImageType::Image2D;
 		ImageFormat ImageFormat = ImageFormat::RGBA8;
 		TextureFilterMode FilterMode = TextureFilterMode::Linear;
 		TextureWrapMode WrapMode = TextureWrapMode::Repeat;

@@ -25,12 +25,12 @@ namespace Luminx
 		inline const IndexType& GetIndexType() const { return m_IndexType; }
 
 	private:
+		std::vector<Ref<Buffer>> m_VertexBuffers{};
+		Ref<Buffer> m_IndexBuffer = nullptr;
+
 		u32 m_RendererID = 0;
 		u32 m_VertexAttribPointer = 0;
 		IndexType m_IndexType = IndexType::U32;
-
-		std::vector<Ref<Buffer>> m_VertexBuffers{};
-		Ref<Buffer> m_IndexBuffer = nullptr;
 	};
 }
 

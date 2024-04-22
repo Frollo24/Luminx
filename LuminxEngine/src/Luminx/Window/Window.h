@@ -49,8 +49,8 @@ namespace Luminx
 		struct WindowData
 		{
 			std::string Title;
-			unsigned int Width = 0;
-			unsigned int Height = 0;
+			u32 Width = 0;
+			u32 Height = 0;
 			bool Minimized = false;
 			bool WasResized = false;
 			bool VSync = false;

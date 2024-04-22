@@ -38,8 +38,8 @@ namespace Luminx
 		void SetMat4(const std::string& name, const glm::mat4& matrix);
 
 	private:
-		u32 m_RendererID = 0;
 		mutable std::unordered_map<std::string, GLint> m_UniformLocationCache;
+		u32 m_RendererID = 0;
 		GLint GetUniformLocation(const std::string& name) const;
 	};
 }

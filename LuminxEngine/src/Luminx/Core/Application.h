@@ -30,11 +30,11 @@ namespace Luminx
 		bool OnWindowResize(WindowResizeEvent& e);
 
 		static Application* s_Instance;
-		bool m_Running = true;
-		float m_LastFrameTime = 0.0f;
-
 		Scope<Window> m_Window;
 		LayerStack m_LayerStack;
+
+		float m_LastFrameTime = 0.0f;
+		bool m_Running = true;
 	};
 
 	// To be defined by client

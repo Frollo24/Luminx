@@ -5,7 +5,7 @@
 namespace Luminx
 {
 #pragma region PipelineDepthState
-	enum class DepthComparison
+	enum class DepthComparison : u8
 	{
 		None,
 		Less,
@@ -25,15 +25,15 @@ namespace Luminx
 
 	struct PipelineDepthState
 	{
-		DepthComparison DepthFunc = DepthComparison::Less;
 		DepthBoundaries DepthRange{};
+		DepthComparison DepthFunc = DepthComparison::Less;
 		bool DepthTest = true;
 		bool DepthWrite = true;
 	};
 #pragma endregion
 
 #pragma region PipelineBlendState
-	enum class BlendFactor
+	enum class BlendFactor : u8
 	{
 		Zero, One,
 		SrcColor, OneMinusSrcColor, DstColor, OneMinusDstColor,
@@ -42,7 +42,7 @@ namespace Luminx
 		ConstantAlpha, OneMinusConstantAlpha,
 	};
 
-	enum class BlendEquation
+	enum class BlendEquation : u8
 	{
 		Add, Subtract, ReverseSubtract, Minimum, Maximum,
 		SrcMinusDst = Subtract,
@@ -59,32 +59,32 @@ namespace Luminx
 
 	struct PipelineBlendState
 	{
+		BlendConstants ConstantColor{};
 		BlendFactor SrcColorFactor = BlendFactor::One;
 		BlendFactor DstColorFactor = BlendFactor::Zero;
 		BlendFactor SrcAlphaFactor = BlendFactor::One;
 		BlendFactor DstAlphaFactor = BlendFactor::Zero;
 		BlendEquation Equation = BlendEquation::Add;
-		BlendConstants ConstantColor{};
 		bool BlendEnable = true;
 	};
 #pragma endregion
 
 #pragma region PipelinePolygonState
-	enum class PolygonRasterMode
+	enum class PolygonRasterMode : u8
 	{
 		Fill,
 		Line,
 		Point
 	};
 
-	enum class CullingMode
+	enum class CullingMode : u8
 	{
 		Front,
 		Back,
 		FrontAndBack
 	};
 
-	enum class FrontFaceMode
+	enum class FrontFaceMode : u8
 	{
 		CounterClockwise,
 		Clockwise
