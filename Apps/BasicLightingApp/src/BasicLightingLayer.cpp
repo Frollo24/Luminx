@@ -7,6 +7,7 @@ static Ref<Shader> s_Shader = nullptr;
 static Ref<Model> s_Model = nullptr;
 static Ref<Camera> s_Camera = nullptr;
 static Ref<Light> s_Light = nullptr;
+static Ref<Material> s_Material = nullptr;
 
 static Ref<Texture> s_DiffuseTexture = nullptr;
 static Ref<Texture> s_DiffuseNoEmissiveTexture = nullptr;
@@ -45,22 +46,28 @@ void BasicLightingLayer::OnAttach()
 
 	s_DiffuseTexture = RenderDevice::CreateTexture(textureDesc);
 	s_DiffuseTexture->SetData(imageData);
-	s_DiffuseTexture->BindTextureUnit(0);
 	Utils::FreeImageData(imageData);
 
 	// Specular texture
 	imageData = Utils::LoadImageFromDisk("assets/textures/specMap.png", imageWidth, imageHeight, imageChannels);
 	s_SpecularTexture = RenderDevice::CreateTexture(textureDesc);
 	s_SpecularTexture->SetData(imageData);
-	s_SpecularTexture->BindTextureUnit(1);
 	Utils::FreeImageData(imageData);
 
 	// Emissive texture
 	imageData = Utils::LoadImageFromDisk("assets/textures/emissive.png", imageWidth, imageHeight, imageChannels);
 	s_EmissiveTexture = RenderDevice::CreateTexture(textureDesc);
 	s_EmissiveTexture->SetData(imageData);
-	s_EmissiveTexture->BindTextureUnit(2);
 	Utils::FreeImageData(imageData);
+
+	// Create material and selecting it
+	std::array<Ref<Texture>, 3> textures = {
+		s_DiffuseTexture,
+		s_SpecularTexture,
+		s_EmissiveTexture
+	};
+	s_Material = CreateRef<PhongMaterial>(s_Shader, textures);
+	s_Material->Select();
 
 	// Create camera
 	s_Camera = Camera::LookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));

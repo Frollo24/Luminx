@@ -86,6 +86,8 @@ namespace Luminx
 		void SetData(const void* data);
 		void BindTextureUnit(u32 textureUnit);
 
+		static Ref<Texture> CreateWhiteTexture();
+
 	private:
 		TextureDescription m_Description{};
 		u32 m_RendererID = 0;

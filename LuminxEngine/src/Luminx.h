@@ -22,7 +22,10 @@
 // Scene
 #include "Luminx/Scene/Camera.h"
 #include "Luminx/Scene/Light.h"
+#include "Luminx/Scene/Material.h"
 #include "Luminx/Scene/Model.h"
+
+#include "Luminx/Scene/Materials/PhongMaterial.h"
 
 // Window system
 #include "Luminx/Window/WindowSystem.h"
