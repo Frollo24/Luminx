@@ -37,7 +37,14 @@ struct DirLight {
 	vec3 direction;
 };
 
+struct Material {
+	vec4 diffuse;
+	vec4 specular;
+	vec4 emissive;
+};
+
 uniform DirLight u_DirLight;
+uniform Material u_Material;
 uniform vec3 u_CameraPosition;
 
 vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
@@ -69,11 +76,10 @@ vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 }
 
 void main(){
-	vec3 Kd = texture(u_DiffuseTexture, v_TexCoord).rgb;
-	vec3 Ks = texture(u_SpecularTexture, v_TexCoord).rgb;
-	vec3 Ke = texture(u_EmissiveTexture, v_TexCoord).rgb;
+	vec3 Kd = texture(u_DiffuseTexture, v_TexCoord).rgb * u_Material.diffuse.rgb;
+	vec3 Ks = texture(u_SpecularTexture, v_TexCoord).rgb * u_Material.specular.rgb;
+	vec3 Ke = texture(u_EmissiveTexture, v_TexCoord).rgb * u_Material.emissive.rgb;
 	vec3 Ka = Kd;
 
 	o_Color = vec4(directional(u_DirLight, Ka, Kd, Ks, Ke), 1.0);
-	// o_Color *= u_DirLight.color;
 }
