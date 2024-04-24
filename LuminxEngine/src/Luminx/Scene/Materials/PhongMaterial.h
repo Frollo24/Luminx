@@ -12,7 +12,7 @@ namespace Luminx
 		virtual void Select() override;
 
 	private:
-		std::array<glm::vec4, 3> m_Colors{glm::vec4(1.0f)};
-		std::array<Ref<Texture>, 3> m_Textures{nullptr};
+		std::array<glm::vec4, 3> m_Colors = { glm::vec4(1.0f), glm::vec4(1.0f), glm::vec4(1.0f) };
+		std::array<Ref<Texture>, 3> m_Textures{ nullptr, nullptr, nullptr };
 	};
 }
