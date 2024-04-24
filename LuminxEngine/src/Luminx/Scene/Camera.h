@@ -27,6 +27,7 @@ namespace Luminx
 		inline void SetView(const glm::mat4& view) { m_View = view; RecalculateViewProjMatrix(); }
 
 		inline const glm::mat4& GetViewProjection() const { return m_ViewProj; }
+		inline glm::vec3 GetPosition() const { return glm::vec3(glm::inverse(m_View) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)); }
 
 		void Update();
 

@@ -103,7 +103,7 @@ void BasicLightingLayer::OnUpdate()
 {
 	s_Camera->Update();
 	s_Shader->Use();
-	s_Shader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
+	s_Shader->SetFloat3("u_CameraPosition", s_Camera->GetPosition());
 	s_Shader->SetMat4("u_Model", s_ModelMat1);
 	s_Shader->SetMat4("u_Normal", glm::transpose(glm::inverse(s_ModelMat1)));
 	s_Shader->SetMat4("u_ModelViewProj", s_Camera->GetViewProjection() * s_ModelMat1);
