@@ -54,7 +54,7 @@ vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 	vec3 worldNormal = normalize(v_WorldNormal);
 	float DdotN = dot(worldNormal, -dirLight.direction);
 	float intensity = dirLight.color.w;
-	float glossyExp = 10.0 * u_Material.glossiness;
+	float glossyExp = 10.0 * u_Material.glossiness + 1.0;
 	float glossyFactor = pow(2.0, glossyExp);
 
 	// Ambient component
