@@ -41,6 +41,7 @@ struct Material {
 	vec4 diffuse;
 	vec4 specular;
 	vec4 emissive;
+	float glossiness;
 };
 
 uniform DirLight u_DirLight;
@@ -53,7 +54,8 @@ vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 	vec3 worldNormal = normalize(v_WorldNormal);
 	float DdotN = dot(worldNormal, -dirLight.direction);
 	float intensity = dirLight.color.w;
-	float glossiness = 32.0;
+	float glossyExp = 10.0 * u_Material.glossiness;
+	float glossyFactor = pow(2.0, glossyExp);
 
 	// Ambient component
 	vec3 ambient = 0.05 * Ka;
@@ -66,7 +68,7 @@ vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 	vec3 V = normalize(u_CameraPosition - v_WorldPosition);
 	vec3 H = normalize(L + V);
 	vec3 N = worldNormal;
-	vec3 specular = Ks * dirLight.color.rgb * intensity * pow(max(0.0, dot(N, H)), glossiness * 2);
+	vec3 specular = Ks * dirLight.color.rgb * intensity * pow(max(0.0, dot(N, H)), glossyFactor) * max(0.0, DdotN);
 
 	// Emissive component
 	float attFactor = 0.33;

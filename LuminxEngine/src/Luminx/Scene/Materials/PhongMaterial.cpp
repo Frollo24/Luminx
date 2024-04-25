@@ -32,6 +32,9 @@ namespace Luminx
 			shader->SetFloat4("u_Material.specular", m_Colors[1]);
 			shader->SetFloat4("u_Material.emissive", m_Colors[2]);
 
+			// Setting glossiness
+			shader->SetFloat("u_Material.glossiness", m_Glossiness);
+
 			// Setting textures
 			shader->SetInt("u_DiffuseTexture", 0);
 			shader->SetInt("u_SpecularTexture", 1);
