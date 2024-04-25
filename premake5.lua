@@ -30,6 +30,7 @@ group "Apps"
 		include "Apps/BasicLightingApp"
 	group "Apps/Lighting"
 		include "Apps/BlinnPhongApp"
+		include "Apps/MaterialsPhongApp"
 group ""
 
 include "LuminxEngine"
