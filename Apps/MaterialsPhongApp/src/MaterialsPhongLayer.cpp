@@ -18,6 +18,8 @@ static std::array<Ref<PhongMaterial>, 11> s_Materials;
 static std::array<glm::mat4, 11> s_ModelMats;
 static std::array<glm::mat4, 11> s_NormalMats;
 
+static bool s_EnergyConserving = false;
+
 static void SelectShading()
 {
 	if (Input::IsKeyDown(KeyCode::P))
@@ -32,6 +34,13 @@ static void SelectShading()
 		s_Shader = s_BlinnPhongShader;
 		for (const auto& material : s_Materials)
 			material->SetShader(s_Shader);
+	}
+
+	if (Input::IsKeyDown(KeyCode::C))
+	{
+		s_EnergyConserving = !s_EnergyConserving;
+		s_PhongShader->SetBool("u_EnergyConserving", s_EnergyConserving);
+		s_BlinnPhongShader->SetBool("u_EnergyConserving", s_EnergyConserving);
 	}
 }
 
@@ -81,11 +90,13 @@ void MaterialsPhongLayer::OnAttach()
 	s_PhongShader->SetFloat4("u_DirLight.color", s_Light->GetLightingData());
 	s_PhongShader->SetFloat3("u_DirLight.direction", s_Light->GetDirection());
 	s_PhongShader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
+	s_PhongShader->SetBool("u_EnergyConserving", s_EnergyConserving);
 
 	s_BlinnPhongShader->SetMat4("u_ModelViewProj", s_Camera->GetViewProjection());
 	s_BlinnPhongShader->SetFloat4("u_DirLight.color", s_Light->GetLightingData());
 	s_BlinnPhongShader->SetFloat3("u_DirLight.direction", s_Light->GetDirection());
 	s_BlinnPhongShader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
+	s_BlinnPhongShader->SetBool("u_EnergyConserving", s_EnergyConserving);
 
 	// Setting texture bindings
 	s_PhongShader->SetInt("u_DiffuseTexture", 0);

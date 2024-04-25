@@ -47,6 +47,9 @@ struct Material {
 uniform DirLight u_DirLight;
 uniform Material u_Material;
 uniform vec3 u_CameraPosition;
+uniform bool u_EnergyConserving;
+
+const float INV_PI = 0.318309886184;
 
 vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 	vec3 color = vec3(0.0);
@@ -62,11 +65,15 @@ vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 	
 	// Diffuse component
 	vec3 diffuse = Kd * dirLight.color.rgb * intensity * max(0.0, DdotN);
+	if (u_EnergyConserving)
+		diffuse *= INV_PI;
 
 	// Specular component
 	vec3 R = reflect(dirLight.direction, worldNormal);
 	vec3 V = normalize(u_CameraPosition - v_WorldPosition);
 	vec3 specular = Ks * dirLight.color.rgb * intensity * pow(max(0.0, dot(R, V)), glossyFactor);
+	if (u_EnergyConserving)
+		specular *= ( 2.0 + glossyFactor ) * 0.5 * INV_PI;
 
 	// Emissive component
 	float attFactor = 0.33;
