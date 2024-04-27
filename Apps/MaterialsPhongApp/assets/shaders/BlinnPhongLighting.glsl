@@ -76,7 +76,7 @@ vec3 directional(DirLight dirLight, vec3 Ka, vec3 Kd, vec3 Ks, vec3 Ke){
 	vec3 N = worldNormal;
 	vec3 specular = Ks * dirLight.color.rgb * intensity * pow(max(0.0, dot(N, H)), glossyFactor) * max(0.0, DdotN);
 	if (u_EnergyConserving)
-		specular *= ( 2.0 + glossyFactor ) * 0.5 * INV_PI;
+		specular *= ( 8.0 + glossyFactor ) * 0.125 * INV_PI;
 
 	// Emissive component
 	float attFactor = 0.33;
