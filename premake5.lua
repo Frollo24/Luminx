@@ -31,6 +31,7 @@ group "Apps"
 	group "Apps/Lighting"
 		include "Apps/BlinnPhongApp"
 		include "Apps/MaterialsPhongApp"
+		include "Apps/LightCastersApp"
 group ""
 
 include "LuminxEngine"
