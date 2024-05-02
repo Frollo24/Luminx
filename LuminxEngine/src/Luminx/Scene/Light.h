@@ -7,7 +7,7 @@ namespace Luminx
 {
 	enum class LightType
 	{
-		Directional
+		Directional, Point, Spot
 	};
 
 	class Light
@@ -24,12 +24,17 @@ namespace Luminx
 		inline void SetDirection(const glm::vec3& direction) { m_Direction = glm::normalize(direction); }
 		inline const glm::vec3& GetDirection() { return m_Direction; }
 
+		inline const float& GetPhi() { return m_Phi; }
+		inline const float& GetGamma() { return m_Gamma; }
+
 	private:
 		LightType m_Type = LightType::Directional;
 		glm::vec3 m_Color;
 		float m_Intensity;
 		glm::vec3 m_Position = glm::vec3(0.0f);
 		glm::vec3 m_Direction = glm::vec3(0.0f, -1.0f, 0.0f);
+		float m_Phi = 25.0f; // Inner cone
+		float m_Gamma = 35.0f; // Outer cone
 	};
 }
 
