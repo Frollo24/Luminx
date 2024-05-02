@@ -1,7 +1,7 @@
 # Luminx
 Luminx is a basic OpenGL application set for testing and exploring various lighting effects.
 
-![Luminx Dev](./Resources/Screenshots/BlinnPhongLighting.png)
+![Luminx Dev](./Resources/Screenshots/LightCasters.png)
 
 ## The idea
 Luminx is a useful tool for those interested in the world of lighting effects. As a basic framework, it provides users with the opportunity to experiment and test different lighting techniques in a controlled environment using OpenGL as the graphics API. This allows for a better understanding of how different lighting effects work without having to deal with a verbose API and focus on the impact of lighting algorithms on the overall visual aesthetics of a scene.
@@ -19,6 +19,7 @@ The applications are organized as follows within the Luminx workspace:
 
 ## Screenshots
 
+![Spot Light](./Resources/Screenshots/SpotLightOnly.png)
 ![Phong Material Showcase](./Resources/Screenshots/PhongMaterialShowcase.png)
 ![Blinn Phong Lighting](./Resources/Screenshots/BlinnPhongLighting.png)
 
