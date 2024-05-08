@@ -19,8 +19,9 @@ The applications are organized as follows within the Luminx workspace:
 
 ## Screenshots
 
-![Spot Light](./Resources/Screenshots/SpotLightOnly.png)
+![Fog Rendering](./Resources/Screenshots/FogRendering.png)
 ![Phong Material Showcase](./Resources/Screenshots/PhongMaterialShowcase.png)
+![Spot Light](./Resources/Screenshots/SpotLightOnly.png)
 ![Blinn Phong Lighting](./Resources/Screenshots/BlinnPhongLighting.png)
 
 ## Requirements
