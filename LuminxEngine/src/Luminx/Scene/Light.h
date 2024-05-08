@@ -18,6 +18,12 @@ namespace Luminx
 
 		inline glm::vec4 GetLightingData() const { return glm::vec4(m_Color, m_Intensity); }
 
+		inline void SetColor(const glm::vec3& color) { m_Color = color; }
+		inline const glm::vec3& GetColor() { return m_Color; }
+
+		inline void SetIntensity(const float& intensity) { m_Intensity = intensity; }
+		inline const float& GetIntensity() { return m_Intensity; }
+
 		inline void SetPosition(const glm::vec3& position) { m_Position = position; }
 		inline const glm::vec3& GetPosition() { return m_Position; }
 
