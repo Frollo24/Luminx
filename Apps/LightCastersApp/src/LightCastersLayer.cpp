@@ -112,10 +112,10 @@ void LightCastersLayer::OnAttach()
 	s_DirLight = CreateRef<Light>(LightType::Directional, glm::vec3(1.0f, 0.95686f, 0.83922f), 0.25f);
 	s_DirLight->SetDirection(glm::vec3(-1.0f, -2.0f, -3.0f));
 
-	s_PointLight = CreateRef<Light>(LightType::Directional, glm::vec3(0.0f, 1.0f, 1.0f), 10.0f);
+	s_PointLight = CreateRef<Light>(LightType::Point, glm::vec3(0.0f, 1.0f, 1.0f), 10.0f);
 	s_PointLight->SetPosition(glm::vec3(5.0f, 0.0f, 3.0f));
 
-	s_SpotLight = CreateRef<Light>(LightType::Directional, glm::vec3(1.0f, 0.95686f, 0.0f), 4.0f);
+	s_SpotLight = CreateRef<Light>(LightType::Spot, glm::vec3(1.0f, 0.95686f, 0.0f), 4.0f);
 	s_SpotLight->SetDirection(glm::vec3(0.0f, 0.0f, -1.0f));
 
 	// Setting shader uniforms
@@ -154,6 +154,8 @@ void LightCastersLayer::OnDetach()
 	s_Camera = nullptr;
 
 	RenderDevice::DestroyTexture(s_DiffuseTexture);
+	RenderDevice::DestroyTexture(s_SpecularTexture);
+	RenderDevice::DestroyTexture(s_EmissiveTexture);
 	RenderDevice::DestroyPipeline(s_Pipeline);
 }
 
