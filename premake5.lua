@@ -32,6 +32,7 @@ group "Apps"
 		include "Apps/BlinnPhongApp"
 		include "Apps/MaterialsPhongApp"
 		include "Apps/LightCastersApp"
+		include "Apps/SimpleFogApp"
 group ""
 
 include "LuminxEngine"
