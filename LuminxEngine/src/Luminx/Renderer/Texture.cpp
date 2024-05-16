@@ -28,6 +28,7 @@ namespace Luminx
 			case ImageType::Image1D: return GL_TEXTURE_1D;
 			case ImageType::Image2D: return GL_TEXTURE_2D;
 			case ImageType::Image3D: return GL_TEXTURE_3D;
+			case ImageType::Cubemap: return GL_TEXTURE_CUBE_MAP;
 			default:
 				return GL_NONE;
 			}
@@ -156,6 +157,7 @@ namespace Luminx
 				glTextureStorage1D(m_RendererID, mipLevels, internalFormat, extent.width);
 				break;
 			case ImageType::Image2D:
+			case ImageType::Cubemap:
 				glTextureStorage2D(m_RendererID, mipLevels, internalFormat, extent.width, extent.height);
 				break;
 			case ImageType::Image3D:
@@ -189,6 +191,12 @@ namespace Luminx
 			glTextureSubImage3D(m_RendererID, 0, 0, 0, 0, m_Description.ImageExtent.width, m_Description.ImageExtent.height, m_Description.ImageExtent.depth,
 				format, type, data);
 			break;
+		case ImageType::Cubemap:
+			for (int face = 0; face < 6; face++)
+			{
+				void* faceData = ((size_t**)(data))[face];
+				glTextureSubImage3D(m_RendererID, 0, 0, 0, face, m_Description.ImageExtent.width, m_Description.ImageExtent.height, 1, format, type, faceData);
+			}
 		default:
 			break;
 		}
@@ -230,7 +238,28 @@ void* Luminx::Utils::LoadHDRImageFromDisk(const std::string_view& path, i32& wid
 	return data;
 }
 
+std::array<void*, 6> Luminx::Utils::LoadCubemapFromDisk(const std::string_view& folder, const std::vector<std::string_view>& facesNames, i32& width, i32& height, i32& channels)
+{
+	std::array<void*, 6> cubemapData{};
+	for (size_t i = 0; i < facesNames.size(); i++)
+	{
+		std::string path = std::string(folder) + std::string(facesNames[i]);
+		void* faceData = LoadImageFromDisk(path, width, height, channels);
+		cubemapData[i] = faceData;
+	}
+	return cubemapData;
+}
+
 void Luminx::Utils::FreeImageData(void* data)
 {
 	stbi_image_free(data);
+}
+
+void Luminx::Utils::FreeCubemapData(const std::array<void*, 6>& cubemapData)
+{
+	for (void* faceData : cubemapData)
+	{
+		FreeImageData(faceData);
+		faceData = nullptr;
+	}
 }

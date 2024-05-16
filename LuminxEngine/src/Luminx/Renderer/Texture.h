@@ -9,7 +9,10 @@ namespace Luminx
 	{
 		void* LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
 		void* LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
+		std::array<void*, 6> LoadCubemapFromDisk(const std::string_view& folder, const std::vector<std::string_view>& facesNames,
+			i32& width, i32& height, i32& channels);
 		void FreeImageData(void* data);
+		void FreeCubemapData(const std::array<void*, 6>& cubemapData);
 	}
 
 	enum class ImageType : u8
@@ -17,6 +20,7 @@ namespace Luminx
 		Image1D,
 		Image2D,
 		Image3D,
+		Cubemap
 	};
 
 	struct ImageExtent

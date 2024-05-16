@@ -8,6 +8,7 @@ static Ref<Pipeline> s_AlphaPipeline = nullptr;
 static Ref<Model> s_Model = nullptr;
 static Ref<Texture> s_Texture = nullptr;
 static Ref<Texture> s_MultisampledTexture = nullptr;
+static Ref<Texture> s_CubemapTexture = nullptr;
 static Ref<Framebuffer> s_Framebuffer = nullptr;
 
 static Ref<Buffer> s_UniformBuffer = nullptr;
@@ -55,13 +56,36 @@ void SandboxLayer::OnAttach()
 
 	// Create texture and set texture data
 	TextureDescription textureDesc{};
-	textureDesc.ImageExtent = {(u32)imageWidth, (u32)imageHeight, 1};
+	textureDesc.ImageExtent = { (u32)imageWidth, (u32)imageHeight, 1 };
 	textureDesc.ImageFormat = imageChannels == 4 ? ImageFormat::RGBA8 : ImageFormat::RGB16F;
 
 	s_Texture = RenderDevice::CreateTexture(textureDesc);
 	s_Texture->SetData(imageData);
 	s_Texture->BindTextureUnit(0);
 	Utils::FreeImageData(imageData);
+
+	// Load cubemap data
+	std::vector<std::string_view> facesNames = {
+		"right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg"
+	};
+	auto cubemapData = Utils::LoadCubemapFromDisk("assets/textures/skyboxFaces/", facesNames, imageWidth, imageHeight, imageChannels);
+
+	// Create texture and set texture data
+	TextureDescription cubemapDesc{};
+	cubemapDesc.ImageType = ImageType::Cubemap;
+	cubemapDesc.ImageExtent = { (u32)imageWidth, (u32)imageHeight, 1 };
+	cubemapDesc.ImageFormat = ImageFormat::RGB8;
+	cubemapDesc.GenerateMipmaps = true;
+
+	s_CubemapTexture = RenderDevice::CreateTexture(cubemapDesc);
+	s_CubemapTexture->SetData(cubemapData.data());
+	s_CubemapTexture->BindTextureUnit(1);
+	Utils::FreeCubemapData(cubemapData);
 
 	// Create multisampled texture with no data
 	textureDesc.SampleCount = SampleCount::Count8;
