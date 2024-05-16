@@ -2,7 +2,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 using namespace Luminx;
 
-static Ref<Pipeline> s_ModelPipeline = nullptr;
 static Ref<Pipeline> s_TexturePipeline = nullptr;
 static Ref<Pipeline> s_AlphaPipeline = nullptr;
 
@@ -16,9 +15,30 @@ static Ref<Buffer> s_UniformBuffer = nullptr;
 void SandboxLayer::OnAttach()
 {
 	// Load Shaders
-	auto& modelShader = CreateRef<Shader>("assets/shaders/TestModel.glsl");
 	auto& textureShader = CreateRef<Shader>("assets/shaders/TestTexture.glsl");
 	auto& alphaShader = CreateRef<Shader>("assets/shaders/TestAlpha.glsl");
+
+	// Create Pipeline from device
+	auto& blendState = PipelineBlendState{};
+	blendState.SrcColorFactor = BlendFactor::SrcAlpha;
+	blendState.DstColorFactor = BlendFactor::OneMinusSrcAlpha;
+	auto& polygonState = PipelinePolygonState{};
+	polygonState.PolygonMode = PolygonRasterMode::Fill;
+	auto& pipelineState = PipelineState{};
+	pipelineState.BlendState = blendState;
+	pipelineState.PolygonState = polygonState;
+	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
+	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
+
+	// Load model
+	s_Model = CreateRef<Model>("assets/models/UVSphere.obj");
+
+
+	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	textureShader->SetMat4("u_ModelViewProj", modelViewProj);
+	alphaShader->SetMat4("u_ModelViewProj", modelViewProj);
+	alphaShader->SetFloat("u_AlphaValue", 0.6);
 
 	// Load image data
 	i32 imageWidth;
@@ -32,36 +52,6 @@ void SandboxLayer::OnAttach()
 	// void* imageData = Utils::LoadImageFromDisk("assets/textures/texture-wood.jpg", imageWidth, imageHeight, imageChannels);
 	void* imageData = Utils::LoadHDRImageFromDisk("assets/textures/clarens_night_02_4k.hdr", imageWidth, imageHeight, imageChannels);
 #endif
-
-	// Create Pipeline from device
-	auto& blendState = PipelineBlendState{};
-	blendState.SrcColorFactor = BlendFactor::SrcAlpha;
-	blendState.DstColorFactor = BlendFactor::OneMinusSrcAlpha;
-	auto& polygonState = PipelinePolygonState{};
-	polygonState.PolygonMode = PolygonRasterMode::Fill;
-	auto& pipelineState = PipelineState{};
-	pipelineState.BlendState = blendState;
-	pipelineState.PolygonState = polygonState;
-	s_ModelPipeline = RenderDevice::CreatePipeline(pipelineState, modelShader);
-	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
-	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
-
-	// Load model
-	s_Model = CreateRef<Model>("assets/models/UVSphere.obj");
-
-#define TRANSLATE 0
-#if TRANSLATE
-	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
-		glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, -1.25f, 0.0f));
-#else
-	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-#endif
-	modelShader->SetMat4("u_ModelViewProj", modelViewProj);
-	textureShader->SetMat4("u_ModelViewProj", modelViewProj);
-	alphaShader->SetMat4("u_ModelViewProj", modelViewProj);
-	alphaShader->SetFloat("u_AlphaValue", 0.6);
 
 	// Create texture and set texture data
 	TextureDescription textureDesc{};
@@ -98,7 +88,6 @@ void SandboxLayer::OnDetach()
 {
 	RenderDevice::DestroyBuffer(s_UniformBuffer);
 	RenderDevice::DestroyTexture(s_Texture);
-	RenderDevice::DestroyPipeline(s_ModelPipeline);
 	RenderDevice::DestroyPipeline(s_TexturePipeline);
 	RenderDevice::DestroyFramebuffer(s_Framebuffer);
 	RenderDevice::DestroyTexture(s_MultisampledTexture);
@@ -106,13 +95,7 @@ void SandboxLayer::OnDetach()
 
 void SandboxLayer::OnUpdate()
 {
-#define USE_TEXTURE 0
-#if USE_TEXTURE
 	s_TexturePipeline->Bind();
-#else
-	s_ModelPipeline->Bind();
-	//s_AlphaPipeline->Bind();
-#endif
 	s_Model->Render();
 
 	ClearValues clearValues{};
