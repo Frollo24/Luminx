@@ -1,7 +1,11 @@
 #include "SandboxLayer.h"
+#include "Luminx/Renderer/SkyboxVertices.h"  // TODO: remove from here
 #include <glm/gtc/matrix_transform.hpp>
 using namespace Luminx;
 
+static Ref<VertexArray> s_SkyboxVertexArray = nullptr;
+
+static Ref<Pipeline> s_SkyboxPipeline = nullptr;
 static Ref<Pipeline> s_TexturePipeline = nullptr;
 static Ref<Pipeline> s_AlphaPipeline = nullptr;
 
@@ -16,27 +20,47 @@ static Ref<Buffer> s_UniformBuffer = nullptr;
 void SandboxLayer::OnAttach()
 {
 	// Load Shaders
+	auto& skyboxShader = CreateRef<Shader>("assets/shaders/TestSkybox.glsl");
 	auto& textureShader = CreateRef<Shader>("assets/shaders/TestTexture.glsl");
 	auto& alphaShader = CreateRef<Shader>("assets/shaders/TestAlpha.glsl");
 
 	// Create Pipeline from device
+	auto& pipelineState = PipelineState{};
+	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
 	auto& blendState = PipelineBlendState{};
 	blendState.SrcColorFactor = BlendFactor::SrcAlpha;
 	blendState.DstColorFactor = BlendFactor::OneMinusSrcAlpha;
-	auto& polygonState = PipelinePolygonState{};
-	polygonState.PolygonMode = PolygonRasterMode::Fill;
-	auto& pipelineState = PipelineState{};
 	pipelineState.BlendState = blendState;
-	pipelineState.PolygonState = polygonState;
-	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
 	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
+
+	// We don't want skybox to render depth
+	pipelineState.DepthState.DepthTest = false;
+	s_SkyboxPipeline = RenderDevice::CreatePipeline(pipelineState, skyboxShader);
+
+	// Create vertex array and vertex buffer for the skybox
+	s_SkyboxVertexArray = CreateRef<VertexArray>();
+
+	BufferDescription vertexBufferDesc{};
+	vertexBufferDesc.Type = BufferType::Vertex;
+	vertexBufferDesc.Size = sizeof(g_SkyboxVertices);
+	vertexBufferDesc.Data = g_SkyboxVertices;
+	Ref<Buffer> vertexBuffer = RenderDevice::CreateBuffer(vertexBufferDesc);
+
+	BufferLayout skyboxBufferLayout = {
+		{ ShaderDataType::Float3, "a_Position" },
+	};
+	s_SkyboxVertexArray->AddVertexBuffer(vertexBuffer, skyboxBufferLayout);
 
 	// Load model
 	s_Model = CreateRef<Model>("assets/models/UVSphere.obj");
 
 
 	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::lookAt(glm::vec3(2.0f, 2.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 skyboxViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
+		glm::mat4(glm::mat3(glm::lookAt(glm::vec3(2.0f, 2.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f))));
+
+	skyboxShader->SetMat4("u_ViewProj", skyboxViewProj);
 	textureShader->SetMat4("u_ModelViewProj", modelViewProj);
 	alphaShader->SetMat4("u_ModelViewProj", modelViewProj);
 	alphaShader->SetFloat("u_AlphaValue", 0.6);
@@ -87,6 +111,8 @@ void SandboxLayer::OnAttach()
 	s_CubemapTexture->BindTextureUnit(1);
 	Utils::FreeCubemapData(cubemapData);
 
+	skyboxShader->SetInt("u_Skybox", 1);
+
 	// Create multisampled texture with no data
 	textureDesc.SampleCount = SampleCount::Count8;
 	s_MultisampledTexture = RenderDevice::CreateTexture(textureDesc);
@@ -119,6 +145,10 @@ void SandboxLayer::OnDetach()
 
 void SandboxLayer::OnUpdate()
 {
+	s_SkyboxPipeline->Bind();
+	RenderCommand::BindVertexArray(s_SkyboxVertexArray);
+	RenderCommand::DrawVertices(36);
+
 	s_TexturePipeline->Bind();
 	s_Model->Render();
 
