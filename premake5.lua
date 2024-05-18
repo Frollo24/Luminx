@@ -33,6 +33,7 @@ group "Apps"
 		include "Apps/MaterialsPhongApp"
 		include "Apps/LightCastersApp"
 		include "Apps/SimpleFogApp"
+		include "Apps/SkyboxApp"
 group ""
 
 include "LuminxEngine"
