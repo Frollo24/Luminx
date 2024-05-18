@@ -155,7 +155,9 @@ namespace Luminx
 
 	void RenderCommand::EndFrame()
 	{
-		// In OpenGL this does nothing
+		// Reset buffer writing to true for any buffer
+		glDepthMask(GL_TRUE);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 
 	void RenderCommand::BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues)
