@@ -222,17 +222,17 @@ namespace Luminx
 	}
 }
 
-void* Luminx::Utils::LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels)
+void* Luminx::Utils::LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels, bool flipOnLoad)
 {
-	stbi_set_flip_vertically_on_load(1);
+	stbi_set_flip_vertically_on_load(flipOnLoad);
 	stbi_uc* data = nullptr;
 	data = stbi_load(path.data(), &width, &height, &channels, 0);
 	return data;
 }
 
-void* Luminx::Utils::LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels)
+void* Luminx::Utils::LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels, bool flipOnLoad)
 {
-	stbi_set_flip_vertically_on_load(1);
+	stbi_set_flip_vertically_on_load(flipOnLoad);
 	float* data = nullptr;
 	data = stbi_loadf(path.data(), &width, &height, &channels, 0);
 	return data;
@@ -244,7 +244,7 @@ std::array<void*, 6> Luminx::Utils::LoadCubemapFromDisk(const std::string_view& 
 	for (size_t i = 0; i < facesNames.size(); i++)
 	{
 		std::string path = std::string(folder) + std::string(facesNames[i]);
-		void* faceData = LoadImageFromDisk(path, width, height, channels);
+		void* faceData = LoadImageFromDisk(path, width, height, channels, false);
 		cubemapData[i] = faceData;
 	}
 	return cubemapData;

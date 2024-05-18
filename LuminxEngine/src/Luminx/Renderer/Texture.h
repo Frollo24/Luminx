@@ -7,8 +7,8 @@ namespace Luminx
 	// Not pretty, but it works at the moment
 	namespace Utils
 	{
-		void* LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
-		void* LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels);
+		void* LoadImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels, bool flipOnLoad = true);
+		void* LoadHDRImageFromDisk(const std::string_view& path, i32& width, i32& height, i32& channels, bool flipOnLoad = true);
 		std::array<void*, 6> LoadCubemapFromDisk(const std::string_view& folder, const std::vector<std::string_view>& facesNames,
 			i32& width, i32& height, i32& channels);
 		void FreeImageData(void* data);
