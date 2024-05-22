@@ -3,17 +3,17 @@
 
 #include "SkyboxLayer.h"
 
-class SimpleFogApp : public Luminx::Application
+class SkyboxApp : public Luminx::Application
 {
 public:
-	SimpleFogApp() : Luminx::Application("Skybox Rendering")
+	SkyboxApp() : Luminx::Application("Skybox Rendering")
 	{
 		PushLayer(new SkyboxLayer());
 	}
-	virtual ~SimpleFogApp() = default;
+	virtual ~SkyboxApp() = default;
 };
 
 Luminx::Application* Luminx::CreateApplication()
 {
-	return new SimpleFogApp();
+	return new SkyboxApp();
 }
