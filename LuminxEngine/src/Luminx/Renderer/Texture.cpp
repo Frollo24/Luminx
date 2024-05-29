@@ -1,7 +1,5 @@
 #include "lumpch.h"
 #include "Texture.h"
-
-// TODO: move to a better place
 #include "RenderDevice.h"
 
 #include <glad/glad.h>

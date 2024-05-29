@@ -1,5 +1,5 @@
 #include "SkyboxLayer.h"
-#include "Luminx/Renderer/SkyboxVertices.h"  // TODO: remove from here
+#include "Luminx/Renderer/SkyboxVertices.h"  // Needed if we want to load the skybox manually
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
 using namespace Luminx;

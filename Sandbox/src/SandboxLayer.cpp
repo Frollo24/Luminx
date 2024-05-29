@@ -1,5 +1,5 @@
 #include "SandboxLayer.h"
-#include "Luminx/Renderer/SkyboxVertices.h"  // TODO: remove from here
+#include "Luminx/Renderer/SkyboxVertices.h"  // Needed if we want to load the skybox manually
 #include <glm/gtc/matrix_transform.hpp>
 using namespace Luminx;
 
@@ -53,7 +53,6 @@ void SandboxLayer::OnAttach()
 
 	// Load model
 	s_Model = CreateRef<Model>("assets/models/UVSphere.obj");
-
 
 	glm::mat4 modelViewProj = glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.3f, 50.0f) *
 		glm::lookAt(glm::vec3(2.0f, 2.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));

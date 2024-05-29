@@ -1,5 +1,4 @@
 #include "UniformBuffersLayer.h"
-#include "Luminx/Renderer/SkyboxVertices.h"  // TODO: remove from here
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
 using namespace Luminx;
@@ -84,27 +83,8 @@ void UniformBuffersLayer::OnAttach()
 	pipelineState.PolygonState = polygonState;
 	s_ModelPipeline = RenderDevice::CreatePipeline(pipelineState, s_ModelShader);
 
-	polygonState = PipelinePolygonState{};
-	pipelineState.PolygonState = polygonState;
-	auto& depthState = PipelineDepthState{};
-	depthState.DepthFunc = DepthComparison::LessOrEqual;
-	depthState.DepthWrite = false;
-	pipelineState.DepthState = depthState;
-	s_SkyboxPipeline = RenderDevice::CreatePipeline(pipelineState, s_SkyboxShader);
-
-	// Create vertex array and vertex buffer for the skybox
-	s_SkyboxVertexArray = CreateRef<VertexArray>();
-
-	BufferDescription vertexBufferDesc{};
-	vertexBufferDesc.Type = BufferType::Vertex;
-	vertexBufferDesc.Size = sizeof(g_SkyboxVertices);
-	vertexBufferDesc.Data = g_SkyboxVertices;
-	Ref<Buffer> vertexBuffer = RenderDevice::CreateBuffer(vertexBufferDesc);
-
-	BufferLayout skyboxBufferLayout = {
-		{ ShaderDataType::Float3, "a_Position" },
-	};
-	s_SkyboxVertexArray->AddVertexBuffer(vertexBuffer, skyboxBufferLayout);
+	// Create the skybox using the renderer functionality
+	Renderer::LoadSkyboxPipeline(s_SkyboxShader);
 
 	// Load models
 	s_LightModel = CreateRef<Model>("assets/models/UVSphere.obj");
@@ -307,11 +287,7 @@ void UniformBuffersLayer::OnUpdate()
 	s_ModelShader->SetMat4("u_Normal", s_NormalMatPlane);
 	s_PlaneModel->Render();
 
-	s_SkyboxPipeline->Bind();
-	glm::mat4 skyboxViewProj = s_Camera->GetProjection() * glm::mat4(glm::mat3(s_Camera->GetView()));
-	s_SkyboxShader->SetMat4("u_ViewProj", skyboxViewProj);
-	RenderCommand::BindVertexArray(s_SkyboxVertexArray);
-	RenderCommand::DrawVertices(36);
+	Renderer::DrawSkybox(s_Camera);
 }
 
 void UniformBuffersLayer::OnEvent(Event& e)

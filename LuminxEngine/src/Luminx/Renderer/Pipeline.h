@@ -21,6 +21,9 @@ namespace Luminx
 		~Pipeline() = default;
 
 		void Bind();
+		
+		inline const PipelineState& GetPipelineState() const { return m_State; }
+		inline const Ref<Shader>& GetShader() const { return m_Shader; }
 
 	private:
 		PipelineState m_State{};

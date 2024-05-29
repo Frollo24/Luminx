@@ -2,7 +2,7 @@
 
 namespace Luminx
 {
-	float g_SkyboxVertices[] = {
+	inline float g_SkyboxVertices[] = {
 		// skybox positions          
 		-1.0f,  1.0f, -1.0f,
 		-1.0f, -1.0f, -1.0f,
