@@ -36,6 +36,7 @@ group "Apps"
 		include "Apps/LightCastersApp"
 		include "Apps/SimpleFogApp"
 		include "Apps/SkyboxApp"
+		include "Apps/ShadowMappingApp"
 group ""
 
 include "LuminxEngine"
