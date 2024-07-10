@@ -2,6 +2,8 @@
 
 #include "Luminx/Core/Base.h"
 
+#include <glm/glm.hpp>
+
 namespace Luminx
 {
 	// Not pretty, but it works at the moment
@@ -36,7 +38,8 @@ namespace Luminx
 		RGB8,
 		RGBA8,
 		RGB9E5,
-		RGB16F
+		RGB16F,
+		DEPTH32
 	};
 
 	enum class TextureFilterMode : u8
@@ -74,6 +77,7 @@ namespace Luminx
 		ImageFormat ImageFormat = ImageFormat::RGBA8;
 		TextureFilterMode FilterMode = TextureFilterMode::Linear;
 		TextureWrapMode WrapMode = TextureWrapMode::Repeat;
+		glm::vec4 BorderColor = {0.0f, 0.0f, 0.0f, 1.0f};
 		SampleCount SampleCount = SampleCount::Count1;
 		bool GenerateMipmaps = true;
 	};

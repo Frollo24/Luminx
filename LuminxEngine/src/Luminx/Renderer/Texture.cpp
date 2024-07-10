@@ -3,6 +3,7 @@
 #include "RenderDevice.h"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
 
 namespace Luminx
@@ -37,11 +38,12 @@ namespace Luminx
 	{
 		switch (format)
 		{
-		case ImageFormat::None:   return GL_NONE;
-		case ImageFormat::RGB8:   return GL_RGB8;
-		case ImageFormat::RGBA8:  return GL_RGBA8;
-		case ImageFormat::RGB9E5: return GL_RGB9_E5;
-		case ImageFormat::RGB16F: return GL_RGB16F;
+		case ImageFormat::None:    return GL_NONE;
+		case ImageFormat::RGB8:    return GL_RGB8;
+		case ImageFormat::RGBA8:   return GL_RGBA8;
+		case ImageFormat::RGB9E5:  return GL_RGB9_E5;
+		case ImageFormat::RGB16F:  return GL_RGB16F;
+		case ImageFormat::DEPTH32: return GL_DEPTH_COMPONENT32;
 		default:
 			return GL_NONE;
 		}
@@ -51,11 +53,12 @@ namespace Luminx
 	{
 		switch (format)
 		{
-		case ImageFormat::None:   return GL_NONE;
-		case ImageFormat::RGB8:   return GL_RGB;
-		case ImageFormat::RGBA8:  return GL_RGBA;
-		case ImageFormat::RGB9E5: return GL_RGB;
-		case ImageFormat::RGB16F: return GL_RGB;
+		case ImageFormat::None:    return GL_NONE;
+		case ImageFormat::RGB8:    return GL_RGB;
+		case ImageFormat::RGBA8:   return GL_RGBA;
+		case ImageFormat::RGB9E5:  return GL_RGB;
+		case ImageFormat::RGB16F:  return GL_RGB;
+		case ImageFormat::DEPTH32: return GL_DEPTH_COMPONENT;
 		default:
 			return GL_NONE;
 		}
@@ -65,11 +68,12 @@ namespace Luminx
 	{
 		switch (format)
 		{
-		case ImageFormat::None:   return GL_NONE;
-		case ImageFormat::RGB8:   return GL_UNSIGNED_BYTE;
-		case ImageFormat::RGBA8:  return GL_UNSIGNED_BYTE;
-		case ImageFormat::RGB9E5: return GL_UNSIGNED_BYTE;
-		case ImageFormat::RGB16F: return GL_FLOAT;
+		case ImageFormat::None:    return GL_NONE;
+		case ImageFormat::RGB8:    return GL_UNSIGNED_BYTE;
+		case ImageFormat::RGBA8:   return GL_UNSIGNED_BYTE;
+		case ImageFormat::RGB9E5:  return GL_UNSIGNED_BYTE;
+		case ImageFormat::RGB16F:  return GL_FLOAT;
+		case ImageFormat::DEPTH32: return GL_FLOAT;
 		default:
 			return GL_NONE;
 		}
@@ -125,6 +129,7 @@ namespace Luminx
 			GLenum wrapMode = TextureWrapModeToOpenGLWrapMode(desc.WrapMode);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, wrapMode);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, wrapMode);
+			glTextureParameterfv(m_RendererID, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(desc.BorderColor));
 		}
 
 		GLsizei mipLevels = 1;
