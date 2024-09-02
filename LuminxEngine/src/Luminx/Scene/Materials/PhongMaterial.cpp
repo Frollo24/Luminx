@@ -8,6 +8,7 @@ namespace Luminx
 	{
 		for (auto& texture : m_Textures)
 			texture = Texture::CreateWhiteTexture();
+		m_NormalTexture = Texture::CreateWhiteTexture();
 	}
 
 	PhongMaterial::PhongMaterial(const Ref<Shader>& shader, const std::array<Ref<Texture>, 3>& textures)
@@ -24,6 +25,9 @@ namespace Luminx
 			if (m_Textures[i])
 				m_Textures[i]->BindTextureUnit(i);
 
+		if (m_NormalTexture)
+			m_NormalTexture->BindTextureUnit(3);
+
 		const auto& shader = GetShader();
 		if (shader)
 		{
@@ -39,6 +43,7 @@ namespace Luminx
 			shader->SetInt("u_DiffuseTexture", 0);
 			shader->SetInt("u_SpecularTexture", 1);
 			shader->SetInt("u_EmissiveTexture", 2);
+			shader->SetInt("u_NormalTexture", 3);
 		}
 	}
 }
