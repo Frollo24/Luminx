@@ -38,12 +38,6 @@ namespace Luminx
 
 			// Setting glossiness
 			shader->SetFloat("u_Material.glossiness", m_Glossiness);
-
-			// Setting textures
-			shader->SetInt("u_DiffuseTexture", 0);
-			shader->SetInt("u_SpecularTexture", 1);
-			shader->SetInt("u_EmissiveTexture", 2);
-			shader->SetInt("u_NormalTexture", 3);
 		}
 	}
 }

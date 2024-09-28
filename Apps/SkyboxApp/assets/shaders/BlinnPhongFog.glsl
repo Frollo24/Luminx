@@ -33,9 +33,9 @@ layout(location = 3) in vec3 v_ViewPosition;
 
 layout(location = 0) out vec4 o_Color;
 
-layout(location = 0) uniform sampler2D u_DiffuseTexture;
-layout(location = 1) uniform sampler2D u_SpecularTexture;
-layout(location = 2) uniform sampler2D u_EmissiveTexture;
+layout(binding = 0) uniform sampler2D u_DiffuseTexture;
+layout(binding = 1) uniform sampler2D u_SpecularTexture;
+layout(binding = 2) uniform sampler2D u_EmissiveTexture;
 
 struct DirLight {
 	vec4 color;

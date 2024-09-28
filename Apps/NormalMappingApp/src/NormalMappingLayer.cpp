@@ -110,12 +110,6 @@ void NormalMappingLayer::OnAttach()
 	s_Shader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
 	s_Shader->SetBool("u_UsingNormalmap", s_UsingNormalmap);
 
-	// Setting texture bindings
-	s_Shader->SetInt("u_DiffuseTexture", 0);
-	s_Shader->SetInt("u_SpecularTexture", 1);
-	s_Shader->SetInt("u_EmissiveTexture", 2);
-	s_Shader->SetInt("u_NormalTexture", 3);
-
 	// Setting default clear value
 	ClearValues clearValues{};
 	clearValues.Color = { 0.01f, 0.01f, 0.01f, 1.0f };

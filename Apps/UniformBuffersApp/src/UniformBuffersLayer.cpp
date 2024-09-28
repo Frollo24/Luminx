@@ -242,11 +242,6 @@ void UniformBuffersLayer::OnAttach()
 	s_ModelShader->SetBool("u_EnablePointLights", true);
 	s_ModelShader->SetBool("u_EnableSpotLights", true);
 
-	// Setting texture bindings
-	s_ModelShader->SetInt("u_DiffuseTexture", 0);
-	s_ModelShader->SetInt("u_SpecularTexture", 1);
-	s_ModelShader->SetInt("u_EmissiveTexture", 2);
-
 	// Bind uniform buffers
 	RenderCommand::BindUniformBuffer(s_LightsUniformBuffer, 0);
 	RenderCommand::BindUniformBuffer(s_FogUniformBuffer, 1);

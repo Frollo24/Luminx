@@ -98,15 +98,6 @@ void MaterialsPhongLayer::OnAttach()
 	s_BlinnPhongShader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
 	s_BlinnPhongShader->SetBool("u_EnergyConserving", s_EnergyConserving);
 
-	// Setting texture bindings
-	s_PhongShader->SetInt("u_DiffuseTexture", 0);
-	s_PhongShader->SetInt("u_SpecularTexture", 1);
-	s_PhongShader->SetInt("u_EmissiveTexture", 2);
-
-	s_BlinnPhongShader->SetInt("u_DiffuseTexture", 0);
-	s_BlinnPhongShader->SetInt("u_SpecularTexture", 1);
-	s_BlinnPhongShader->SetInt("u_EmissiveTexture", 2);
-
 	// Setting default clear value
 	ClearValues clearValues{};
 	clearValues.Color = { 0.01f, 0.01f, 0.01f, 1.0f };

@@ -198,11 +198,6 @@ void SkyboxLayer::OnAttach()
 
 	s_ModelShader->SetFloat3("u_FogColor", glm::vec3(0.55f, 0.7f, 0.75f));
 	s_ModelShader->SetFloat("u_FogDensity", 0.05f);
-
-	// Setting texture bindings
-	s_ModelShader->SetInt("u_DiffuseTexture", 0);
-	s_ModelShader->SetInt("u_SpecularTexture", 1);
-	s_ModelShader->SetInt("u_EmissiveTexture", 2);
 }
 
 void SkyboxLayer::OnDetach()

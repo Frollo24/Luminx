@@ -83,7 +83,7 @@ void BasicLightingLayer::OnAttach()
 	s_Shader->SetFloat3("u_DirLight.direction", s_Light->GetDirection());
 	s_Shader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
 
-	// Setting texture bindings
+	// Setting texture bindings (not strictly necessary as they are already specified in the shader)
 	s_Shader->SetInt("u_DiffuseTexture", 0);
 	s_Shader->SetInt("u_SpecularTexture", 1);
 	s_Shader->SetInt("u_EmissiveTexture", 2);

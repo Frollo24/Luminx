@@ -250,6 +250,7 @@ void ShadowMappingLayer::OnUpdate()
 	RenderCommand::DefaultFramebuffer();
 	RenderCommand::SetViewport(0, 0, Application::Instance().GetWindow().GetWidth(), Application::Instance().GetWindow().GetHeight());
 	s_ModelPipeline->Bind();
+	s_ShadowMapTexture->BindTextureUnit(3);
 	s_ModelShader->SetFloat3("u_CameraPosition", s_Camera->GetPosition());
 	s_ModelShader->SetMat4("u_LightSpaceMatrix", s_LightSpaceMatrix);
 

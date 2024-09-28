@@ -99,11 +99,6 @@ void BlinnPhongLayer::OnAttach()
 	s_Shader->SetFloat3("u_DirLight.direction", s_Light->GetDirection());
 	s_Shader->SetFloat3("u_CameraPosition", -glm::vec3(s_Camera->GetView()[3]));
 
-	// Setting texture bindings
-	s_Shader->SetInt("u_DiffuseTexture", 0);
-	s_Shader->SetInt("u_SpecularTexture", 1);
-	s_Shader->SetInt("u_EmissiveTexture", 2);
-
 	// Setting default clear value
 	ClearValues clearValues{};
 	clearValues.Color = { 0.01f, 0.01f, 0.01f, 1.0f };
