@@ -147,7 +147,7 @@ namespace Luminx
 	Shader::Shader(const std::string& filepath)
 	{
 		std::string source = ReadFile(filepath);
-		auto shaderSources = PreProcess(source);
+		ShaderStreamMap shaderSources = PreProcess(source);
 		m_RendererID = Compile(shaderSources);
 	}
 
