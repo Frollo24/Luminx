@@ -270,6 +270,13 @@ namespace Luminx
 				Utils::BlendEquationToGLBlendEquation(blendAttachment.ColorEquation.Operation),
 				Utils::BlendEquationToGLBlendEquation(blendAttachment.AlphaEquation.Operation)
 			);
+
+			glColorMaski( i,
+				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskR),
+				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskG),
+				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskB),
+				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskA)
+			);
 		}
 
 		glBlendColor(blendState.ConstantColor.R, blendState.ConstantColor.G, blendState.ConstantColor.B, blendState.ConstantColor.A);

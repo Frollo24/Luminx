@@ -34,7 +34,8 @@ void SandboxLayer::OnAttach()
 	blendState.BlendAttachments[1].BlendEnable = true;
 	blendState.BlendAttachments[1].ColorEquation.SrcFactor = BlendFactor::ConstantColor;
 	blendState.BlendAttachments[1].ColorEquation.DstFactor = BlendFactor::OneMinusConstantColor;
-	blendState.ConstantColor = { 0.6f, 1.0f, 0.3f, 1.0f };
+	blendState.BlendAttachments[1].ColorWriteMask = ColorWriteMask::ColorWriteMaskR | ColorWriteMask::ColorWriteMaskB;
+	blendState.ConstantColor = { 1.0f, 0.6f, 0.3f, 1.0f };
 	pipelineState.BlendState = blendState;
 	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
 
@@ -167,7 +168,7 @@ void SandboxLayer::OnUpdate()
 	s_Model->Render();
 
 	ClearValues clearValues{};
-	clearValues.Color = { 1.0f, 0.6f, 0.3f, 1.0f };
+	clearValues.Color = { 0.6f, 1.0f, 0.3f, 1.0f };
 	clearValues.ClearFlags = ClearFlags::All;
 	RenderCommand::BeginRenderPass(s_Framebuffer, clearValues);
 	s_AlphaPipeline->Bind();
