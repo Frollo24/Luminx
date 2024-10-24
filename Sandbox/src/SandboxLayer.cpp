@@ -28,13 +28,15 @@ void SandboxLayer::OnAttach()
 	auto& pipelineState = PipelineState{};
 	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
 	auto& blendState = PipelineBlendState{};
-	blendState.SrcColorFactor = BlendFactor::SrcAlpha;
-	blendState.DstColorFactor = BlendFactor::OneMinusSrcAlpha;
+	blendState.BlendAttachments[0].BlendEnable = true;
+	blendState.BlendAttachments[0].ColorEquation.SrcFactor = BlendFactor::SrcAlpha;
+	blendState.BlendAttachments[0].ColorEquation.DstFactor = BlendFactor::OneMinusSrcAlpha;
 	pipelineState.BlendState = blendState;
 	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
 
 	// We don't want skybox to render depth
 	pipelineState.DepthState.DepthTest = false;
+	pipelineState.BlendState.BlendAttachments[0].BlendEnable = false;
 	s_SkyboxPipeline = RenderDevice::CreatePipeline(pipelineState, skyboxShader);
 
 	// Create vertex array and vertex buffer for the skybox

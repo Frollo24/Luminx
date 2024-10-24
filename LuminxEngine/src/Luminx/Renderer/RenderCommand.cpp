@@ -47,15 +47,15 @@ namespace Luminx
 			}
 		}
 
-		static GLenum BlendEquationToGLBlendEquation(BlendEquation equation)
+		static GLenum BlendEquationToGLBlendEquation(BlendOperation equation)
 		{
 			switch (equation)
 			{
-				case BlendEquation::Add:             return GL_FUNC_ADD;
-				case BlendEquation::Subtract:        return GL_FUNC_SUBTRACT;
-				case BlendEquation::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
-				case BlendEquation::Minimum:         return GL_MIN;
-				case BlendEquation::Maximum:         return GL_MAX;
+				case BlendOperation::Add:             return GL_FUNC_ADD;
+				case BlendOperation::Subtract:        return GL_FUNC_SUBTRACT;
+				case BlendOperation::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+				case BlendOperation::Minimum:         return GL_MIN;
+				case BlendOperation::Maximum:         return GL_MAX;
 				default:
 					return GL_NONE;
 			}
@@ -229,19 +229,30 @@ namespace Luminx
 
 	void RenderCommand::SetBlendState(const PipelineBlendState& blendState)
 	{
-		if (!blendState.BlendEnable)
+		for (int i = 0; i < blendState.BlendAttachments.size(); i++)
 		{
-			glDisable(GL_BLEND);
-			return;
+			const BlendAttachment& blendAttachment = blendState.BlendAttachments[i];
+			if (!blendAttachment.BlendEnable)
+			{
+				glDisablei(GL_BLEND, i);
+				continue;
+			}
+			glEnablei(GL_BLEND, i);
+
+			glBlendFuncSeparatei( i,
+				Utils::BlendFactorToGLBlendFactor(blendAttachment.ColorEquation.SrcFactor),
+				Utils::BlendFactorToGLBlendFactor(blendAttachment.ColorEquation.DstFactor),
+				Utils::BlendFactorToGLBlendFactor(blendAttachment.AlphaEquation.SrcFactor),
+				Utils::BlendFactorToGLBlendFactor(blendAttachment.AlphaEquation.DstFactor)
+			);
+
+			glBlendEquationSeparatei( i,
+				Utils::BlendEquationToGLBlendEquation(blendAttachment.ColorEquation.Operation),
+				Utils::BlendEquationToGLBlendEquation(blendAttachment.AlphaEquation.Operation)
+			);
 		}
-		glEnable(GL_BLEND);
-		glBlendFuncSeparate(
-			Utils::BlendFactorToGLBlendFactor(blendState.SrcColorFactor),
-			Utils::BlendFactorToGLBlendFactor(blendState.DstColorFactor),
-			Utils::BlendFactorToGLBlendFactor(blendState.SrcAlphaFactor),
-			Utils::BlendFactorToGLBlendFactor(blendState.DstAlphaFactor)
-		);
-		glBlendEquation(Utils::BlendEquationToGLBlendEquation(blendState.Equation));
+
+		glBlendColor(blendState.ConstantColor.R, blendState.ConstantColor.G, blendState.ConstantColor.B, blendState.ConstantColor.A);
 	}
 
 	void RenderCommand::SetPolygonState(const PipelinePolygonState& polygonState)

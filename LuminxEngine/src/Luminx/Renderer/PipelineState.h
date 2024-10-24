@@ -33,6 +33,15 @@ namespace Luminx
 #pragma endregion
 
 #pragma region PipelineBlendState
+	enum class ColorWriteMask : u8
+	{
+		ColorWriteMaskR = LUM_BIT(0), // 1 (0x0001)
+		ColorWriteMaskG = LUM_BIT(1), // 2 (0x0010)
+		ColorWriteMaskB = LUM_BIT(2), // 4 (0x0100)
+		ColorWriteMaskA = LUM_BIT(3), // 8 (0x1000)
+		ColorWriteMaskAll = ColorWriteMaskR | ColorWriteMaskG | ColorWriteMaskB | ColorWriteMaskA, // 15 (0x1111)
+	};
+
 	enum class BlendFactor : u8
 	{
 		Zero, One,
@@ -42,11 +51,26 @@ namespace Luminx
 		ConstantAlpha, OneMinusConstantAlpha,
 	};
 
-	enum class BlendEquation : u8
+	enum class BlendOperation : u8
 	{
 		Add, Subtract, ReverseSubtract, Minimum, Maximum,
 		SrcMinusDst = Subtract,
 		DstMinusSrc = ReverseSubtract,
+	};
+
+	struct BlendingEquation
+	{
+		BlendFactor SrcFactor = BlendFactor::One;
+		BlendFactor DstFactor = BlendFactor::Zero;
+		BlendOperation Operation = BlendOperation::Add;
+	};
+
+	struct BlendAttachment
+	{
+		BlendingEquation ColorEquation{};
+		BlendingEquation AlphaEquation{};
+		ColorWriteMask ColorWriteMask = ColorWriteMask::ColorWriteMaskAll;
+		bool BlendEnable = false;
 	};
 
 	struct BlendConstants
@@ -59,14 +83,11 @@ namespace Luminx
 
 	struct PipelineBlendState
 	{
+		std::array<BlendAttachment, 8> BlendAttachments{};
 		BlendConstants ConstantColor{};
-		BlendFactor SrcColorFactor = BlendFactor::One;
-		BlendFactor DstColorFactor = BlendFactor::Zero;
-		BlendFactor SrcAlphaFactor = BlendFactor::One;
-		BlendFactor DstAlphaFactor = BlendFactor::Zero;
-		BlendEquation Equation = BlendEquation::Add;
-		bool BlendEnable = true;
 	};
+
+	LUM_DEFINE_ENUM_FLAG_OPERATORS(ColorWriteMask);
 #pragma endregion
 
 #pragma region PipelinePolygonState
