@@ -31,12 +31,17 @@ void SandboxLayer::OnAttach()
 	blendState.BlendAttachments[0].BlendEnable = true;
 	blendState.BlendAttachments[0].ColorEquation.SrcFactor = BlendFactor::SrcAlpha;
 	blendState.BlendAttachments[0].ColorEquation.DstFactor = BlendFactor::OneMinusSrcAlpha;
+	blendState.BlendAttachments[1].BlendEnable = true;
+	blendState.BlendAttachments[1].ColorEquation.SrcFactor = BlendFactor::ConstantColor;
+	blendState.BlendAttachments[1].ColorEquation.DstFactor = BlendFactor::OneMinusConstantColor;
+	blendState.ConstantColor = { 0.6f, 1.0f, 0.3f, 1.0f };
 	pipelineState.BlendState = blendState;
 	s_AlphaPipeline = RenderDevice::CreatePipeline(pipelineState, alphaShader);
 
-	// We don't want skybox to render depth
+	// We don't want skybox to render depth nor any blending
 	pipelineState.DepthState.DepthTest = false;
 	pipelineState.BlendState.BlendAttachments[0].BlendEnable = false;
+	pipelineState.BlendState.BlendAttachments[1].BlendEnable = false;
 	s_SkyboxPipeline = RenderDevice::CreatePipeline(pipelineState, skyboxShader);
 
 	// Create vertex array and vertex buffer for the skybox
@@ -112,16 +117,24 @@ void SandboxLayer::OnAttach()
 	s_CubemapTexture->BindTextureUnit(1);
 	Utils::FreeCubemapData(cubemapData);
 
-	skyboxShader->SetInt("u_Skybox", 1);
-
-	// Create multisampled texture with no data
+	// Create multisampled textures with no data
 	textureDesc.SampleCount = SampleCount::Count8;
 	s_MultisampledTexture = RenderDevice::CreateTexture(textureDesc);
 
+	textureDesc.ImageFormat = ImageFormat::RGB16F;
+	Ref<Texture> textureColorHDR = RenderDevice::CreateTexture(textureDesc);
+
+	textureDesc.ImageFormat = ImageFormat::DEPTH32;
+	Ref<Texture> textureDepth = RenderDevice::CreateTexture(textureDesc);	
+
 	// Create framebuffer and attach texture
 	FramebufferDescription framebufferDesc{};
-	framebufferDesc.Attachments.push_back(AttachmentType::Color);
-	framebufferDesc.RenderTargets.push_back(s_MultisampledTexture);
+	framebufferDesc.Attachments[0] = AttachmentType::Color;
+	framebufferDesc.RenderTargets[0] = s_MultisampledTexture;
+	framebufferDesc.Attachments[1] = AttachmentType::Color;
+	framebufferDesc.RenderTargets[1] = textureColorHDR;
+	framebufferDesc.Attachments[2] = AttachmentType::Depth;
+	framebufferDesc.RenderTargets[2] = textureDepth;
 	s_Framebuffer = RenderDevice::CreateFramebuffer(framebufferDesc);
 
 	// Create uniform buffer
@@ -155,7 +168,7 @@ void SandboxLayer::OnUpdate()
 
 	ClearValues clearValues{};
 	clearValues.Color = { 1.0f, 0.6f, 0.3f, 1.0f };
-	clearValues.ClearFlags = ClearFlags::Color;
+	clearValues.ClearFlags = ClearFlags::All;
 	RenderCommand::BeginRenderPass(s_Framebuffer, clearValues);
 	s_AlphaPipeline->Bind();
 	s_Model->Render();

@@ -163,27 +163,47 @@ namespace Luminx
 	void RenderCommand::BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues)
 	{
 		framebuffer->Bind();
-		if ((u8)(clearValues.ClearFlags & ClearFlags::Color))
-		{
-			std::array<GLfloat, 4> clearColor = { clearValues.Color.r, clearValues.Color.g, clearValues.Color.b, clearValues.Color.a };
-			glClearNamedFramebufferfv(framebuffer->GetRendererID(), GL_COLOR, 0, clearColor.data());
-		}
 
-		if (clearValues.ClearFlags == ClearFlags::DepthStencil)
+		const auto& attachments = framebuffer->GetDescription().Attachments;
+		GLuint framebufferID = framebuffer->GetRendererID();
+		GLuint drawbuffer = 0;
+
+		for (const AttachmentType& attachment: attachments)
 		{
-			GLfloat depth = clearValues.Depth;
-			GLint stencil = clearValues.Stencil;
-			glClearNamedFramebufferfi(framebuffer->GetRendererID(), GL_DEPTH_STENCIL, 0, depth, stencil);
-		}
-		else if ((u8)(clearValues.ClearFlags & ClearFlags::Depth))
-		{
-			GLfloat depth = clearValues.Depth;
-			glClearNamedFramebufferfv(framebuffer->GetRendererID(), GL_DEPTH, 0, &depth);
-		}
-		else if ((u8)(clearValues.ClearFlags & ClearFlags::Stencil))
-		{
-			GLint stencil = clearValues.Stencil;
-			glClearNamedFramebufferiv(framebuffer->GetRendererID(), GL_STENCIL, 0, &stencil);
+			switch (attachment)
+			{
+				case AttachmentType::Color:
+					if ((u8)(clearValues.ClearFlags & ClearFlags::Color))
+					{
+						std::array<GLfloat, 4> clearColor = { clearValues.Color.r, clearValues.Color.g, clearValues.Color.b, clearValues.Color.a };
+						glClearNamedFramebufferfv(framebufferID, GL_COLOR, drawbuffer++, clearColor.data());
+					}
+					break;
+				case AttachmentType::Depth:
+					if ((u8)(clearValues.ClearFlags & ClearFlags::Depth))
+					{
+						GLfloat depth = clearValues.Depth;
+						glClearNamedFramebufferfv(framebufferID, GL_DEPTH, 0, &depth);
+					}
+					break;
+				case AttachmentType::Stencil:
+					if ((u8)(clearValues.ClearFlags & ClearFlags::Stencil))
+					{
+						GLint stencil = clearValues.Stencil;
+						glClearNamedFramebufferiv(framebufferID, GL_STENCIL, 0, &stencil);
+					}
+					break;
+				case AttachmentType::DepthStencil:
+					if (clearValues.ClearFlags == ClearFlags::DepthStencil)
+					{
+						GLfloat depth = clearValues.Depth;
+						GLint stencil = clearValues.Stencil;
+						glClearNamedFramebufferfi(framebufferID, GL_DEPTH_STENCIL, 0, depth, stencil);
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

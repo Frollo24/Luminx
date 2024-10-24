@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Luminx/Core/Base.h"
+#include "Luminx/Renderer/Common.h"
 
 namespace Luminx
 {
@@ -83,7 +84,7 @@ namespace Luminx
 
 	struct PipelineBlendState
 	{
-		std::array<BlendAttachment, 8> BlendAttachments{};
+		std::array<BlendAttachment, MAX_COLOR_ATTACHMENTS> BlendAttachments{};
 		BlendConstants ConstantColor{};
 	};
 

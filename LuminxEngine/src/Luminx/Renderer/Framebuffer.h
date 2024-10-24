@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Luminx/Core/Base.h"
+#include "Luminx/Renderer/Common.h"
 #include "Texture.h"
 
 #include <glm/glm.hpp>
@@ -38,8 +39,8 @@ namespace Luminx
 
 	struct FramebufferDescription
 	{
-		std::vector<AttachmentType> Attachments;
-		std::vector<Ref<Texture>> RenderTargets;
+		std::array<AttachmentType, MAX_TOTAL_ATTACHMENTS> Attachments = { AttachmentType::None };
+		std::array<Ref<Texture>, MAX_TOTAL_ATTACHMENTS> RenderTargets = { nullptr };
 		u32 Width = 0;
 		u32 Height = 0;
 	};
@@ -60,6 +61,7 @@ namespace Luminx
 
 	private:
 		FramebufferDescription m_Description{};
+		u32 m_RenderTargetCount = 0;
 		u32 m_RendererID = 0;
 	};
 }

@@ -202,8 +202,8 @@ void ShadowMappingLayer::OnAttach()
 	FramebufferDescription framebufferDesc{};
 	framebufferDesc.Width = 2048;
 	framebufferDesc.Height = 2048;
-	framebufferDesc.Attachments.push_back(AttachmentType::Depth);
-	framebufferDesc.RenderTargets.push_back(s_ShadowMapTexture);
+	framebufferDesc.Attachments[0] = AttachmentType::Depth;
+	framebufferDesc.RenderTargets[0] = s_ShadowMapTexture;
 	s_ShadowFramebuffer = RenderDevice::CreateFramebuffer(framebufferDesc);
 }
 

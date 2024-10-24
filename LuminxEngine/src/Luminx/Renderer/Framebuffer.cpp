@@ -24,12 +24,39 @@ namespace Luminx
 		: m_Description(desc)
 	{
 		glCreateFramebuffers(1, &m_RendererID);
+		GLsizei drawbufferCount = 0;
 		for (int i = 0; i < m_Description.RenderTargets.size(); i++)
 		{
 			const Ref<Texture>& renderTarget = m_Description.RenderTargets[i];
 			const AttachmentType& attachment = m_Description.Attachments[i];
-			glNamedFramebufferTexture(m_RendererID, AttachmentTypeToOpenGLAttachment(attachment), renderTarget->GetRendererID(), 0);
+			if (!renderTarget)
+				break;
+
+			GLenum openglAttachment = AttachmentTypeToOpenGLAttachment(attachment);
+			if (openglAttachment == GL_COLOR_ATTACHMENT0)
+				openglAttachment += drawbufferCount;
+
+			glNamedFramebufferTexture(m_RendererID, openglAttachment, renderTarget->GetRendererID(), 0);
+			m_RenderTargetCount++;
+
+			if (attachment == AttachmentType::Color)
+				drawbufferCount++;
 		}
+
+		if (drawbufferCount)
+		{
+			std::array<GLenum, MAX_COLOR_ATTACHMENTS> drawbuffers = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+				GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7
+			};
+			glNamedFramebufferDrawBuffers(m_RendererID, drawbufferCount, drawbuffers.data());
+		}
+		else
+		{
+			glNamedFramebufferDrawBuffer(m_RendererID, GL_NONE);
+		}
+
+		LUM_CORE_ASSERT(glCheckNamedFramebufferStatus(m_RendererID, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 	}
 
 	Framebuffer::~Framebuffer()
@@ -53,10 +80,13 @@ namespace Luminx
 		m_Description.Height = height;
 
 		std::vector<TextureDescription> resizedDescs;
-		resizedDescs.reserve(m_Description.RenderTargets.size());
+		resizedDescs.reserve(m_RenderTargetCount);
 
 		for (auto& renderTarget : m_Description.RenderTargets)
 		{
+			if (!renderTarget)
+				break;
+
 			TextureDescription newTexDesc{};
 			newTexDesc.ImageExtent = { width, height, 1 };
 			newTexDesc.ImageFormat = renderTarget->GetDescription().ImageFormat;
@@ -66,14 +96,23 @@ namespace Luminx
 			RenderDevice::DestroyTexture(renderTarget);
 		}
 
-		m_Description.RenderTargets.clear();
+		m_Description.RenderTargets = { nullptr };
 
+		GLuint drawbuffer = 0;
 		for (int i = 0; i < resizedDescs.size(); i++)
 		{
 			const Ref<Texture>& renderTarget = RenderDevice::CreateTexture(resizedDescs[i]);
 			const AttachmentType& attachment = m_Description.Attachments[i];
-			glNamedFramebufferTexture(m_RendererID, AttachmentTypeToOpenGLAttachment(attachment), renderTarget->GetRendererID(), 0);
-			m_Description.RenderTargets.push_back(renderTarget);
+
+			GLenum openglAttachment = AttachmentTypeToOpenGLAttachment(attachment);
+			if (openglAttachment == GL_COLOR_ATTACHMENT0)
+				openglAttachment += drawbuffer;
+
+			glNamedFramebufferTexture(m_RendererID, openglAttachment, renderTarget->GetRendererID(), 0);
+			m_RenderTargetCount++;
+
+			if (attachment == AttachmentType::Color)
+				drawbuffer++;
 		}
 
 		LUM_CORE_TRACE("Framebuffer Resized!");
