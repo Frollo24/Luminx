@@ -92,7 +92,7 @@ namespace Luminx
 				case FrontFaceMode::CounterClockwise: return GL_CCW;
 				case FrontFaceMode::Clockwise:        return GL_CW;
 				default:
-					break;
+					return GL_NONE;
 			}
 		}
 
@@ -160,16 +160,27 @@ namespace Luminx
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 
-	void RenderCommand::BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues)
+	void RenderCommand::BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& commonClearValues)
 	{
 		framebuffer->Bind();
 
-		const auto& attachments = framebuffer->GetDescription().Attachments;
+		const FramebufferDescription& description = framebuffer->GetDescription();
 		GLuint framebufferID = framebuffer->GetRendererID();
 		GLuint drawbuffer = 0;
+		int attachmentIndex = 0;
+		ClearValues clearValues = {};
 
-		for (const AttachmentType& attachment: attachments)
+		if (commonClearValues.ClearFlags != ClearFlags::None)
+			clearValues = commonClearValues;
+
+		for (const AttachmentType& attachment : description.Attachments)
 		{
+			if (attachment == AttachmentType::None)
+				break;
+
+			if (commonClearValues.ClearFlags == ClearFlags::None)
+				clearValues = description.ClearValues[attachmentIndex];
+
 			switch (attachment)
 			{
 				case AttachmentType::Color:
@@ -204,6 +215,8 @@ namespace Luminx
 				default:
 					break;
 			}
+
+			attachmentIndex++;
 		}
 	}
 
@@ -249,29 +262,29 @@ namespace Luminx
 
 	void RenderCommand::SetBlendState(const PipelineBlendState& blendState)
 	{
-		for (int i = 0; i < blendState.BlendAttachments.size(); i++)
+		for (int idx = 0; idx < blendState.BlendAttachments.size(); idx++)
 		{
-			const BlendAttachment& blendAttachment = blendState.BlendAttachments[i];
+			const BlendAttachment& blendAttachment = blendState.BlendAttachments[idx];
 			if (!blendAttachment.BlendEnable)
 			{
-				glDisablei(GL_BLEND, i);
+				glDisablei(GL_BLEND, idx);
 				continue;
 			}
-			glEnablei(GL_BLEND, i);
+			glEnablei(GL_BLEND, idx);
 
-			glBlendFuncSeparatei( i,
+			glBlendFuncSeparatei(idx,
 				Utils::BlendFactorToGLBlendFactor(blendAttachment.ColorEquation.SrcFactor),
 				Utils::BlendFactorToGLBlendFactor(blendAttachment.ColorEquation.DstFactor),
 				Utils::BlendFactorToGLBlendFactor(blendAttachment.AlphaEquation.SrcFactor),
 				Utils::BlendFactorToGLBlendFactor(blendAttachment.AlphaEquation.DstFactor)
 			);
 
-			glBlendEquationSeparatei( i,
+			glBlendEquationSeparatei(idx,
 				Utils::BlendEquationToGLBlendEquation(blendAttachment.ColorEquation.Operation),
 				Utils::BlendEquationToGLBlendEquation(blendAttachment.AlphaEquation.Operation)
 			);
 
-			glColorMaski( i,
+			glColorMaski(idx,
 				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskR),
 				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskG),
 				GLboolean(blendAttachment.ColorWriteMask & ColorWriteMask::ColorWriteMaskB),

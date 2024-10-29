@@ -136,6 +136,17 @@ void SandboxLayer::OnAttach()
 	framebufferDesc.RenderTargets[1] = textureColorHDR;
 	framebufferDesc.Attachments[2] = AttachmentType::Depth;
 	framebufferDesc.RenderTargets[2] = textureDepth;
+
+	ClearValues clearValues = {};
+	clearValues.ClearFlags = ClearFlags::Color;
+	clearValues.Color = { 1.0f, 0.2f, 0.2f, 1.0f };
+	framebufferDesc.ClearValues[0] = clearValues;
+	clearValues.Color = { 0.6f, 1.0f, 0.3f, 1.0f };
+	framebufferDesc.ClearValues[1] = clearValues;
+	clearValues.ClearFlags = ClearFlags::Depth;
+	clearValues.Depth = 1.0f;
+	framebufferDesc.ClearValues[2] = clearValues;
+
 	s_Framebuffer = RenderDevice::CreateFramebuffer(framebufferDesc);
 
 	// Create uniform buffer
@@ -167,10 +178,11 @@ void SandboxLayer::OnUpdate()
 	s_TexturePipeline->Bind();
 	s_Model->Render();
 
-	ClearValues clearValues{};
-	clearValues.Color = { 0.6f, 1.0f, 0.3f, 1.0f };
-	clearValues.ClearFlags = ClearFlags::All;
-	RenderCommand::BeginRenderPass(s_Framebuffer, clearValues);
+	ClearValues commonClearValues{};
+	commonClearValues.Color = { 0.6f, 1.0f, 0.3f, 1.0f };
+	commonClearValues.ClearFlags = ClearFlags::All;
+	// RenderCommand::BeginRenderPass(s_Framebuffer, commonClearValues);
+	RenderCommand::BeginRenderPass(s_Framebuffer);
 	s_AlphaPipeline->Bind();
 	s_Model->Render();
 	RenderCommand::EndRenderPass();

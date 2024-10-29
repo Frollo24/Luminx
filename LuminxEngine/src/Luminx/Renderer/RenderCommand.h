@@ -16,7 +16,7 @@ namespace Luminx
 		static void BeginFrame();
 		static void EndFrame();
 
-		static void BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& clearValues);
+		static void BeginRenderPass(const Ref<Framebuffer>& framebuffer, const ClearValues& commonClearValues = {});
 		static void EndRenderPass();
 		static void DefaultFramebuffer();
 		static void DefaultClearValues(const ClearValues& clearValues);

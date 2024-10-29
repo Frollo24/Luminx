@@ -41,6 +41,7 @@ namespace Luminx
 	{
 		std::array<AttachmentType, MAX_TOTAL_ATTACHMENTS> Attachments = { AttachmentType::None };
 		std::array<Ref<Texture>, MAX_TOTAL_ATTACHMENTS> RenderTargets = { nullptr };
+		std::array<ClearValues, MAX_TOTAL_ATTACHMENTS> ClearValues = { {} };
 		u32 Width = 0;
 		u32 Height = 0;
 	};

@@ -204,6 +204,12 @@ void ShadowMappingLayer::OnAttach()
 	framebufferDesc.Height = 2048;
 	framebufferDesc.Attachments[0] = AttachmentType::Depth;
 	framebufferDesc.RenderTargets[0] = s_ShadowMapTexture;
+
+	ClearValues shadowClearValues{};
+	shadowClearValues.Depth = 1.0f;
+	shadowClearValues.ClearFlags = ClearFlags::Depth;
+	framebufferDesc.ClearValues[0] = shadowClearValues;
+
 	s_ShadowFramebuffer = RenderDevice::CreateFramebuffer(framebufferDesc);
 }
 
@@ -226,10 +232,7 @@ void ShadowMappingLayer::OnUpdate()
 {
 	s_Camera->Update();
 
-	ClearValues shadowClearValues{};
-	shadowClearValues.Depth = 1.0f;
-	shadowClearValues.ClearFlags = ClearFlags::Depth;
-	RenderCommand::BeginRenderPass(s_ShadowFramebuffer, shadowClearValues);
+	RenderCommand::BeginRenderPass(s_ShadowFramebuffer);
 	RenderCommand::SetViewport(0, 0, s_ShadowFramebuffer->GetDescription().Width, s_ShadowFramebuffer->GetDescription().Height);
 	s_ShadowPipeline->Bind();
 	s_ShadowShader->SetFloat3("u_CameraPosition", s_Camera->GetPosition());
