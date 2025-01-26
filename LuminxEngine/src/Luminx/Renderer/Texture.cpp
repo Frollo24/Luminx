@@ -42,7 +42,9 @@ namespace Luminx
 		case ImageFormat::RGB8:    return GL_RGB8;
 		case ImageFormat::RGBA8:   return GL_RGBA8;
 		case ImageFormat::RGB9E5:  return GL_RGB9_E5;
+		case ImageFormat::RG16F:   return GL_RG16F;
 		case ImageFormat::RGB16F:  return GL_RGB16F;
+		case ImageFormat::RGBA16F: return GL_RGBA16F;
 		case ImageFormat::DEPTH32: return GL_DEPTH_COMPONENT32;
 		default:
 			return GL_NONE;
@@ -57,7 +59,9 @@ namespace Luminx
 		case ImageFormat::RGB8:    return GL_RGB;
 		case ImageFormat::RGBA8:   return GL_RGBA;
 		case ImageFormat::RGB9E5:  return GL_RGB;
+		case ImageFormat::RG16F:   return GL_RG;
 		case ImageFormat::RGB16F:  return GL_RGB;
+		case ImageFormat::RGBA16F: return GL_RGBA;
 		case ImageFormat::DEPTH32: return GL_DEPTH_COMPONENT;
 		default:
 			return GL_NONE;
@@ -72,7 +76,9 @@ namespace Luminx
 		case ImageFormat::RGB8:    return GL_UNSIGNED_BYTE;
 		case ImageFormat::RGBA8:   return GL_UNSIGNED_BYTE;
 		case ImageFormat::RGB9E5:  return GL_UNSIGNED_BYTE;
+		case ImageFormat::RG16F:   return GL_FLOAT;
 		case ImageFormat::RGB16F:  return GL_FLOAT;
+		case ImageFormat::RGBA16F: return GL_FLOAT;
 		case ImageFormat::DEPTH32: return GL_FLOAT;
 		default:
 			return GL_NONE;

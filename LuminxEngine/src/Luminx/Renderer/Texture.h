@@ -38,7 +38,9 @@ namespace Luminx
 		RGB8,
 		RGBA8,
 		RGB9E5,
+		RG16F,
 		RGB16F,
+		RGBA16F,
 		DEPTH32
 	};
 
