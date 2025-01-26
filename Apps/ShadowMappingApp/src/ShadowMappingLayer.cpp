@@ -268,9 +268,11 @@ void ShadowMappingLayer::OnUpdate()
 	}
 
 	s_PlaneMaterial->Select();
+	s_ShadowMapTexture->BindTextureUnit(3);
 	s_ModelShader->SetMat4("u_Model", s_ModelMatPlane);
-	s_ModelShader->SetMat4("u_Normal", s_NormalMatPlane);
+	s_ModelShader->SetMat4("u_ModelView", s_Camera->GetView() * s_ModelMatPlane);
 	s_ModelShader->SetMat4("u_ModelViewProj", s_Camera->GetViewProjection() * s_ModelMatPlane);
+	s_ModelShader->SetMat4("u_Normal", s_NormalMatPlane);
 	s_PlaneModel->Render();
 
 	s_SkyboxPipeline->Bind();
