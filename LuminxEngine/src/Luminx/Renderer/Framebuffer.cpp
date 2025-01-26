@@ -97,11 +97,13 @@ namespace Luminx
 		}
 
 		m_Description.RenderTargets = { nullptr };
+		m_RenderTargetCount = 0;
 
 		GLuint drawbuffer = 0;
 		for (int i = 0; i < resizedDescs.size(); i++)
 		{
 			const Ref<Texture>& renderTarget = RenderDevice::CreateTexture(resizedDescs[i]);
+			m_Description.RenderTargets[i] = renderTarget;
 			const AttachmentType& attachment = m_Description.Attachments[i];
 
 			GLenum openglAttachment = AttachmentTypeToOpenGLAttachment(attachment);
