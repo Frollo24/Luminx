@@ -12,6 +12,7 @@ namespace Luminx
 	{
 		None = 0,
 		Vertex,
+		Geometry,
 		Fragment,
 		Count
 	};

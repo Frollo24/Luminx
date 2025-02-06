@@ -7,6 +7,7 @@ static Ref<VertexArray> s_SkyboxVertexArray = nullptr;
 
 static Ref<Pipeline> s_SkyboxPipeline = nullptr;
 static Ref<Pipeline> s_TexturePipeline = nullptr;
+static Ref<Pipeline> s_GeometryPipeline = nullptr;
 static Ref<Pipeline> s_AlphaPipeline = nullptr;
 
 static Ref<Model> s_Model = nullptr;
@@ -22,11 +23,13 @@ void SandboxLayer::OnAttach()
 	// Load Shaders
 	auto& skyboxShader = CreateRef<Shader>("assets/shaders/TestSkybox.glsl");
 	auto& textureShader = CreateRef<Shader>("assets/shaders/TestTexture.glsl");
+	auto& geometryShader = CreateRef<Shader>("assets/shaders/TestGeometry.glsl");
 	auto& alphaShader = CreateRef<Shader>("assets/shaders/TestAlpha.glsl");
 
 	// Create Pipeline from device
 	auto& pipelineState = PipelineState{};
 	s_TexturePipeline = RenderDevice::CreatePipeline(pipelineState, textureShader);
+	s_GeometryPipeline = RenderDevice::CreatePipeline(pipelineState, geometryShader);
 	auto& blendState = PipelineBlendState{};
 	blendState.BlendAttachments[0].BlendEnable = true;
 	blendState.BlendAttachments[0].ColorEquation.SrcFactor = BlendFactor::SrcAlpha;
@@ -69,6 +72,8 @@ void SandboxLayer::OnAttach()
 
 	skyboxShader->SetMat4("u_ViewProj", skyboxViewProj);
 	textureShader->SetMat4("u_ModelViewProj", modelViewProj);
+	geometryShader->SetMat4("u_ModelViewProj", modelViewProj);
+	geometryShader->SetFloat("u_Magnitude", 2.0);
 	alphaShader->SetMat4("u_ModelViewProj", modelViewProj);
 	alphaShader->SetFloat("u_AlphaValue", 0.6);
 
@@ -175,7 +180,9 @@ void SandboxLayer::OnUpdate()
 	RenderCommand::BindVertexArray(s_SkyboxVertexArray);
 	RenderCommand::DrawVertices(36);
 
-	s_TexturePipeline->Bind();
+	// s_TexturePipeline->Bind();
+	s_GeometryPipeline->Bind();
+	s_GeometryPipeline->GetShader()->SetFloat("u_Time", Time::TotalTime);
 	s_Model->Render();
 
 	ClearValues commonClearValues{};

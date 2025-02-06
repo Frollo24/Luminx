@@ -12,6 +12,7 @@ namespace Luminx
 		{
 			case ShaderType::None:			return 0;
 			case ShaderType::Vertex:		return GL_VERTEX_SHADER;
+			case ShaderType::Geometry:		return GL_GEOMETRY_SHADER;
 			case ShaderType::Fragment:		return GL_FRAGMENT_SHADER;
 
 			default:
@@ -61,6 +62,8 @@ namespace Luminx
 			{
 				if (line.find("vertex") != std::string::npos)
 					type = ShaderType::Vertex;
+				else if (line.find("geometry") != std::string::npos)
+					type = ShaderType::Geometry;
 				else if (line.find("fragment") != std::string::npos)
 					type = ShaderType::Fragment;
 			}
