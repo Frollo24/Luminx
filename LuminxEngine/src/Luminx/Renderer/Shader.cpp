@@ -140,6 +140,8 @@ namespace Luminx
 
 		for (const GLuint& id : glShaderIDs)
 		{
+			if (id == 0) continue;
+
 			glDetachShader(program, id);
 			glDeleteShader(id);
 		}
